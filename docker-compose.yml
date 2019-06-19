@@ -1,0 +1,8 @@
+version: '3'
+services:
+
+react-server:
+  container_name: react-server
+  image: react-server 
+  ports:
+    - "3000:3000"-

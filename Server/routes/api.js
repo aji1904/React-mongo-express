@@ -1,0 +1,119 @@
+const { Router } = require('express')
+const Admin = require('../models/admin')
+const Student = require('../models/mahasiswa')
+const Lecture = require('../models/dosen')
+const Lab = require('../models/lab-history')
+const historydosen = require('../models/history-dosen')
+const router = Router()
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken');
+
+router.get('/admin',  async (req, res) => {
+
+	const password = await bcrypt.hash( 'admin12345', 10 )
+
+	const newAdmin = new Admin({
+		user: 'aji123',
+		password: password,
+		status: 'admin',
+		email: 'admin12345@gmail.com',
+		notelp: '081281121290'
+	})
+
+	try {
+		await newAdmin.save()
+		res.send('Save Admin Berhasil')
+	} catch (err) {
+		console.log('Save Admin gagal:', err)
+		res.send('Save Admin Gagal')
+	}
+})
+
+
+router
+.post('/mahasiswa', async (req, res) => {
+	req.body.password = bcrypt.hashSync( req.body.password , 10 )
+
+	const newStudent = new Student(req.body)
+	try {
+		await newStudent.save()
+		console.log('save berhasil')
+		res.end('Save siswa berhasil')
+	} catch (err) {
+		console.log('save siswa gagal', err)
+		res.end('Save admin gagal')
+	}
+})
+
+router.post('/dosen', async ( req, res ) => {
+	req.body.password = await bcrypt.hash( req.body.password, 10 )
+
+	const newLecture = new Lecture(req.body)
+	try {
+		await newLecture.save()
+		console.log( newLecture )
+		res.end('save dosen berhasil')
+	} catch (error) {
+		console.log('save dosen gagal', err)
+		res.end('save dosen gagal')
+	}
+})
+
+router.post('/historydosen', async ( req, res ) => {
+	const newhistorydosen = new historydosen(req.body)
+	try {
+		await newhistorydosen.save()
+		console.log( newhistorydosen )
+		res.end('save history dosen berhasil')
+	} catch (error) {
+		console.log('save history dosen gagal', err)
+		res.end('save history dosen gagal')
+	}
+})
+
+router.post('/lab', async ( req, res ) => {
+	
+	const newLab = new Lab(req.body)
+	try {
+		await newLab.save()
+		res.end('save lab berhasil')
+	} catch (error) {
+		console.log('save lab gagal', err)
+		res.end('save lab gagal')
+	}
+})
+
+router.post('/auth',  async (req, res) => {
+	let model = null
+
+	switch(req.body.role) {
+		case 'admin':
+			model = Admin.findOne({ username: req.body.username })
+			break;
+		case 'dosen':
+			model = Lecture.findOne({ nip: req.body.nip })
+			break;
+		default:
+			model = Student.findOne({ nim: req.body.nim })
+			break;
+	}
+
+	console.log(model.password)
+
+	const sukses = bcrypt.compare(req.body.password, model.password)
+
+	if (sukses) {
+		delete model._doc.pass
+		const token = jwt.sign({ ...model })
+		console.log('sukses')
+		res.status(200).send('Login Sukses')
+	} else {
+		res,status(401).send('Login Gagal, Data Login atau Password salah!');
+		console.log('Login Gagal, Data Login atau Password salah!')
+	}
+
+	res.end()
+})
+
+module.exports = router
+
