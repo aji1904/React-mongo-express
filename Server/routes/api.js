@@ -29,6 +29,16 @@ router.get('/admin',  async (req, res) => {
 	}
 })
 
+router.get('/data/user/:token', async (req, res) => {
+	const data = jwt.verify(req.params.token, 'rahasia');
+	if (data) {
+		res.status(200).send(data)
+	} else {
+		res.status(401).send('Anda tidak terautentikasi')
+	}
+	res.end()
+})
+
 
 router
 .post('/mahasiswa', async (req, res) => {
@@ -98,18 +108,21 @@ router.post('/auth',  async (req, res) => {
 			break;
 	}
 
-	console.log(model)
+	if (model) {
+		const sukses = await bcrypt.compare(req.body.password, model.password)
 
-	const sukses = bcrypt.compare(req.body.password, model.password)
-
-	if (sukses) {
-		delete model._doc.pass
-		const token = jwt.sign({ ...model })
-		console.log('sukses')
-		res.status(200).send('Login Sukses')
+		if (sukses) {
+			delete model._doc.password
+			const token = jwt.sign({ ...model._doc }, 'rahasia')
+			res.status(200).send({
+				token: token,
+				pesan: 'Login Sukses'
+			})
+		} else {
+			res.status(401).send('Login Gagal, Data Login atau Password salah!')
+		}
 	} else {
-		res,status(401).send('Login Gagal, Data Login atau Password salah!');
-		console.log('Login Gagal, Data Login atau Password salah!')
+		res.status(401).send('Username Salah atau Tidak Terdaftar')
 	}
 
 	res.end()

@@ -1,10 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+bOOimport PropTypes from 'prop-types';
+impOOort { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import TypBography from '@material-ui/core/Typography';
+imporOOOOAt Button from '@material-ui/core/Button';
 import Logo from '../../Images/images.png';
 import Center from 'react-center';
 import SendIcon from '@material-ui/icons/Send';
@@ -18,7 +18,7 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
-import LocalStorage from 'simple-webstorage/lib/local';
+import storage from 'simple-webstorage/lib/local';
  
 const styles = theme => ({
   root: {
@@ -96,8 +96,6 @@ class LoginAdmin extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    const storage = LocalStorage()
-
     const auth = {
       username: this.state.username,
       password: this.state.password,
@@ -105,8 +103,8 @@ class LoginAdmin extends React.Component {
     }
 
     axios.post('http://localhost:4000/api/auth', auth)
-      .then(res => {
-        storage.set('logintoken', res.data.token)
+      .then(({ data })=>{
+        storage.set('logintoken', data.token)
         this.props.history.push('/MenuAdmin')
       })
       .catch(({ response })=>{
@@ -121,7 +119,7 @@ class LoginAdmin extends React.Component {
         <AppBar position="static">
           <Toolbar>
             <Link to="/" className={classes.Link}>
-              <IconButton color="inherit" className={classes.IconButton}>
+              <IconButton color="inherit" className={classes.IconButton} >
                 <Icon className={classes.icon}>
                   arrow_back
                 </Icon>

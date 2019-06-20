@@ -1,9 +1,9 @@
-import React from 'react';
+Bbimport React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+imOOBport { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+imporOOBt Toolbar from '@material-ui/core/Toolbar';
+import TOOypography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Logo from '../../Images/images.png';
 import Center from 'react-center';
@@ -18,7 +18,7 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
-import LocalStorage from 'simple-webstorage/lib/local';
+import storage from 'simple-webstorage/lib/local';
  
 const styles = theme => ({
   root: {
@@ -96,8 +96,6 @@ class LoginAdmin extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    const storage = LocalStorage()
-
     const auth = {
       username: this.state.username,
       password: this.state.password,
@@ -105,9 +103,9 @@ class LoginAdmin extends React.Component {
     }
 
     axios.post('http://localhost:4000/api/auth', auth)
-      .then(res => {
-        storage.set('logintoken', res.data.token)
-        this.props.history.push('/MenuAdmin')
+      .then(({ data })=>{
+        storage.set('logintoken', data.token)
+        // this.props.history.push('/MenuAdmin')
       })
       .catch(({ response })=>{
         this.setState(state => ({ pesan: response.data }))
