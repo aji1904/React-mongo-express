@@ -17,7 +17,6 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
 import LocalStorage from 'simple-webstorage/lib/local';
  
 const styles = theme => ({
@@ -67,9 +66,10 @@ const styles = theme => ({
     outline: 'none',
     color: 'white',
   },
-  snackbar: {
-    margin: 10,
-  },
+  pesan: {
+    color: 'red',
+    paddingBottom: 10,
+  }
 });
 
 class LoginAdmin extends React.Component {
@@ -116,6 +116,7 @@ class LoginAdmin extends React.Component {
 
   render() {
     const { classes } = this.props;
+
     return (
       <div className={classes.root}>
         <AppBar position="static">
@@ -137,11 +138,11 @@ class LoginAdmin extends React.Component {
             <img src={Logo} alt="logo" className={classes.logo} />
           </Center>
         </div>
-        <div>
-          {}
-        </div>
         <ValidatorForm ref="form" onSubmit={this.handleSubmit} onError={erros => console.log(erros)}>
         <div className={classes.Container}>
+        <div>
+          <Center className={classes.pesan}>{this.state.pesan}</Center>
+        </div>
           <div>
             <Center>
               <TextValidator
@@ -168,9 +169,6 @@ class LoginAdmin extends React.Component {
                 errorMessages = {['this Username is null', 'Minimal 5 Karakter. Contoh: Admin']}
               />
             </Center>
-          </div>
-          <p>{this.state.pesan}</p>
-          <div>
             <Center>
               <TextValidator
                 id="outlined-adornment-password"
