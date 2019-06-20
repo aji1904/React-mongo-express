@@ -41,19 +41,17 @@ router.get('/data/user/:token', async (req, res) => {
 
 
 router.post('/mahasiswa', async (req, res) => {
-
 	const check = await Student.findOne({ nim: req.body.nim })
 
 	if (check) {
-		res.status(401).send('User Telah Tersedia')
-		
+		res.status(401).send('Data Mahasiswa Telah Tersedia')
 	}else{
 		req.body.password = bcrypt.hashSync( req.body.password , 10 )
 		const newStudent = new Student(req.body)
 		try {
 			await newStudent.save()
 			console.log('save berhasil')
-			res.status(401).send('User Telah Ditambahkan')
+			res.status(401).send('Data Mahasiswa Telah Ditambahkan')
 		} catch (err) {
 			console.log('save siswa gagal', err)
 		}
@@ -61,16 +59,21 @@ router.post('/mahasiswa', async (req, res) => {
 })
 
 router.post('/dosen', async ( req, res ) => {
-	req.body.password = await bcrypt.hash( req.body.password, 10 )
+	const check = await Student.findOne({ nip: req.body.nip })
 
-	const newLecture = new Lecture(req.body)
-	try {
-		await newLecture.save()
-		console.log( newLecture )
-		res.end('save dosen berhasil')
-	} catch (error) {
-		console.log('save dosen gagal', err)
-		res.end('save dosen gagal')
+	if (check) {
+		res.status(401).send('Data Dosen Telah Tersedia !')
+	} else {
+		req.body.password = await bcrypt.hash( req.body.password, 10 )
+
+		const newLecture = new Lecture(req.body)
+		try {
+			await newLecture.save()
+			console.log('save dosen berhasil')
+			res.status(401).send('Data Dosen Telah Ditambahkan')
+		} catch (error) {
+			console.log('save dosen gagal', err)
+		}
 	}
 })
 
