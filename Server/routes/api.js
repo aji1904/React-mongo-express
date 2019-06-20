@@ -10,10 +10,10 @@ const jwt = require('jsonwebtoken');
 
 router.get('/admin',  async (req, res) => {
 
-	const password = await bcrypt.hash( 'admin12345', 10 )
+	const password = await bcrypt.hash( 'admin123', 10 )
 
 	const newAdmin = new Admin({
-		user: 'aji123',
+		username: 'admin123',
 		password: password,
 		status: 'admin',
 		email: 'admin12345@gmail.com',
@@ -88,17 +88,17 @@ router.post('/auth',  async (req, res) => {
 
 	switch(req.body.role) {
 		case 'admin':
-			model = Admin.findOne({ username: req.body.username })
+			model = await Admin.findOne({ username: req.body.username })
 			break;
 		case 'dosen':
-			model = Lecture.findOne({ nip: req.body.nip })
+			model = await Lecture.findOne({ nip: req.body.nip })
 			break;
 		default:
-			model = Student.findOne({ nim: req.body.nim })
+			model = await Student.findOne({ nim: req.body.nim })
 			break;
 	}
 
-	console.log(model.password)
+	console.log(model)
 
 	const sukses = bcrypt.compare(req.body.password, model.password)
 
@@ -113,6 +113,7 @@ router.post('/auth',  async (req, res) => {
 	}
 
 	res.end()
+
 })
 
 module.exports = router
