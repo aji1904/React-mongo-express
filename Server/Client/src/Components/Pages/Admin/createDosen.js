@@ -46,14 +46,19 @@ const styles = theme => ({
     marginTop: 28,
     marginBottom: 50,
   },
+  pesan: {
+    color: 'red',
+    paddingBottom: 10,
+  }
 });
 
 class createDosen extends React.Component {
   state = {
-    nidn : '',
+    nip : '',
     password : '',
     nama : '',
     telepon : '',
+    pesan: '',
   } 
   handleChange = event => {
     const {name} = event.target
@@ -66,19 +71,18 @@ class createDosen extends React.Component {
     event.preventDefault();
 
     const createDosen = {
-      nidn: this.state.nidn,
+      nip: this.state.nip,
       password: this.state.password,
       nama: this.state.nama,
       telepon: this.state.telepon,
     }
 
     axios.post('http://localhost:4000/api/dosen', createDosen)
-      .then(res=>{
-        console.log(res);
-        console.log(res.data);
+      .then( ({response})=>{
+        this.setState(state => ({pesan: response.data}) )
       })
-      .catch(err=>{
-        console.error('error axios',err)
+      .catch( ({response})=>{
+        this.setState(state => ({pesan: response.data}) )
       })
   }
 
@@ -108,16 +112,19 @@ class createDosen extends React.Component {
         <ValidatorForm ref="form" onSubmit={this.handleSubmit} onError={errors => console.log(errors)}>
         <div className={classes.Content}>
         <div>
+          <Center className={classes.pesan}>{this.state.pesan}</Center>
+        </div>
+        <div>
           <Center>
             <TextValidator
-              label="NIDN Dosen"
+              label="NIP Dosen"
               className={classes.textField}
               margin="dense"
               variant="outlined"
               style={{width : 400}}
               type="number"
-              name="nidn"
-              value={this.state.nidn}
+              name="nip"
+              value={this.state.nip}
               onChange={this.handleChange}
               validators = {['required', 'minStringLength: 12']}
               errorMessages = {['this field is null', 'Minimal 12 Karakter. Contoh: 061630700529']}
