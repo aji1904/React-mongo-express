@@ -78,7 +78,7 @@ class LoginAdmin extends React.Component {
     password: '',
     role: 'admin',
     showPassword: false,
-    pesan: ''
+    pesan: '',
   }
 
   handleChange = event => {
@@ -109,8 +109,8 @@ class LoginAdmin extends React.Component {
         storage.set('logintoken', res.data.token)
         this.props.history.push('/MenuAdmin')
       })
-      .catch(({ response })=>{
-        this.setState(state => ({ pesan: response.data }))
+      .catch( ({ response }) => {
+        this.setState(state => ({ pesan: response.data }) )
       })
   }
 

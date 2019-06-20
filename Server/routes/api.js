@@ -40,18 +40,23 @@ router.get('/data/user/:token', async (req, res) => {
 })
 
 
-router
-.post('/mahasiswa', async (req, res) => {
-	req.body.password = bcrypt.hashSync( req.body.password , 10 )
+router.post('/mahasiswa', async (req, res) => {
 
-	const newStudent = new Student(req.body)
-	try {
-		await newStudent.save()
-		console.log('save berhasil')
-		res.end('Save siswa berhasil')
-	} catch (err) {
-		console.log('save siswa gagal', err)
-		res.end('Save admin gagal')
+	const check = await Student.findOne({ nim: req.body.nim })
+
+	if (check) {
+		res.status(401).send('User Telah Tersedia')
+		
+	}else{
+		req.body.password = bcrypt.hashSync( req.body.password , 10 )
+		const newStudent = new Student(req.body)
+		try {
+			await newStudent.save()
+			console.log('save berhasil')
+			res.status(401).send('User Telah Ditambahkan')
+		} catch (err) {
+			console.log('save siswa gagal', err)
+		}
 	}
 })
 

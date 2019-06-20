@@ -46,6 +46,13 @@ const styles = theme => ({
     marginTop: 28,
     marginBottom: 50,
   },
+  pesan: {
+    color: 'red',
+    paddingBottom: 10,
+  },
+  error: {
+    backgroundColor: theme.palette.error.dark,
+  },
 });
 
 class createUser extends React.Component {
@@ -56,6 +63,7 @@ class createUser extends React.Component {
     kelas : '',
     email : '',
     status : '',
+    pesan : '',
   } 
   handleChange = event => {
     const {name} = event.target
@@ -77,12 +85,11 @@ class createUser extends React.Component {
     }
 
     axios.post('http://localhost:4000/api/mahasiswa', createUser)
-      .then(res=>{
-        console.log(res);
-        console.log(res.data);
+      .then( ({response}) => {
+        this.setState(state => ({ pesan: response.data }) )
       })
-      .catch(err=>{
-        console.error('error axios',err)
+      .catch( ({response}) => {
+        this.setState(state => ({ pesan: response.data }) )
       })
   }
 
@@ -111,6 +118,10 @@ class createUser extends React.Component {
         { /* Content Profile */ }
         <ValidatorForm onSubmit={this.handleSubmit} ref="form" onError={errors => console.log(errors)}>
         <div className={classes.Content}>
+
+        <div>
+          <Center className={classes.pesan}>{this.state.pesan}</Center>
+        </div>
         <div>
           <Center>
             <TextValidator
