@@ -17,7 +17,9 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
+import LocalStorage from 'simple-webstorage/lib/local';
  
 const styles = {
   root: {
@@ -65,6 +67,9 @@ const styles = {
     outline: 'none',
     color: 'white',
   },
+  pesan: {
+    color: 'red',
+  }
 };
 
 class LoginDosen extends React.Component {
@@ -73,6 +78,7 @@ class LoginDosen extends React.Component {
     password: '',
     role: 'dosen',
     showPassword: false,
+    open: false,
   }
 
   handleChange = event => {
@@ -83,12 +89,20 @@ class LoginDosen extends React.Component {
     })
   }
 
+  handleClose = event => {
+    this.setState({
+      open: false
+    })
+  }
+
   handleClickShowPassword = () => {
     this.setState(state => ({ showPassword: !state.showPassword }));
-  };
+  }
 
   handleSubmit = event => {
     event.preventDefault();
+
+    const storage = LocalStorage()
 
     const auth = {
       nip: this.state.nip,
@@ -96,14 +110,21 @@ class LoginDosen extends React.Component {
       role: this.state.role,
     }
 
-    axios.post('http://localhost:4000/api/historydosen', auth)
+    this.setState({
+      nip: '',
+      password: '',
+      open: true,
+    })
+
+    axios.post('http://localhost:4000/api/auth', auth)
       .then(res=>{
-        console.log(res);
-        console.log(res.data);
+        storage.set('logintoken', res.data.token)
+        this.props.history.push('/MenuDosen')
       })
-      .catch(err=>{
-        console.error('error axios',err)
-      })
+      .catch( ({response}) => {
+        this.setState(state => ({pesan: response.data}) )
+      }
+    )
   }
 
   render() {
@@ -137,7 +158,7 @@ class LoginDosen extends React.Component {
                 label="NIP Dosen"
                 className={classes.textField}
                 type="number"
-                name="nidn"
+                name="nip"
                 margin="normal"
                 variant="outlined"
                 InputProps={{
@@ -197,6 +218,33 @@ class LoginDosen extends React.Component {
           </div>
         </div>
         </ValidatorForm>
+
+        { /*Snackbar*/ }
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={this.state.open}
+          autoHideDuration={5000}
+          onClose={this.handleClose}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id" className={classes.pesan}>{this.state.pesan}</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={this.handleClose}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
       </div>
     );
   }
