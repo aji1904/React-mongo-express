@@ -77,6 +77,13 @@ class createDosen extends React.Component {
       telepon: this.state.telepon,
     }
 
+    this.setState({
+      nip : '',  
+      password : '',
+      nama : '',
+      telepon : '',
+    })
+
     axios.post('http://localhost:4000/api/dosen', createDosen)
       .then( ({response})=>{
         this.setState(state => ({pesan: response.data}) )
