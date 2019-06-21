@@ -12,6 +12,8 @@ import SendIcon from '@material-ui/icons/Send';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
 
 const styles = theme => ({
   root: {
@@ -59,7 +61,9 @@ class createDosen extends React.Component {
     nama : '',
     telepon : '',
     pesan: '',
+    open: false,
   } 
+
   handleChange = event => {
     const {name} = event.target
 
@@ -67,6 +71,13 @@ class createDosen extends React.Component {
       [name]:event.target.value
     });
   }
+
+  handleClose = event => {
+    this.setState({
+      open: false,
+    })
+  }
+
   handleSubmit = event => {
     event.preventDefault();
 
@@ -82,6 +93,7 @@ class createDosen extends React.Component {
       password : '',
       nama : '',
       telepon : '',
+      open: true,
     })
 
     axios.post('http://localhost:4000/api/dosen', createDosen)
@@ -117,10 +129,7 @@ class createDosen extends React.Component {
           
         { /* Content Profile */ }
         <ValidatorForm ref="form" onSubmit={this.handleSubmit} onError={errors => console.log(errors)}>
-        <div className={classes.Content}>
-        <div>
-          <Center className={classes.pesan}>{this.state.pesan}</Center>
-        </div>
+        <div className={classes.Content}> 
         <div>
           <Center>
             <TextValidator
@@ -199,6 +208,33 @@ class createDosen extends React.Component {
           </div>
         </div>
       </ValidatorForm>
+
+    { /*Snackbar*/ }
+
+    <Snackbar
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      open={this.state.open}
+      autoHideDuration={4000}
+      onClose={this.handleClose}
+      ContentProps={{
+        'aria-describedby': 'message-id',
+      }}
+      message={<span id="message-id">{this.state.pesan}</span>}
+      action={[
+        <IconButton
+          key="close"
+          aria-label="Close"
+          color="inherit"
+          className={classes.close}
+          onClick={this.handleClose}
+        >
+          <CloseIcon />
+        </IconButton>,
+      ]}
+    />
 
       </div>
     );
