@@ -50,7 +50,6 @@ const styles = theme => ({
   },
   pesan: {
     color: 'red',
-    paddingBottom: 10,
   }
 });
 
@@ -74,7 +73,7 @@ class createDosen extends React.Component {
 
   handleClose = event => {
     this.setState({
-      open: false,
+      open: false,  
     })
   }
 
@@ -217,12 +216,12 @@ class createDosen extends React.Component {
         horizontal: 'center',
       }}
       open={this.state.open}
-      autoHideDuration={4000}
+      autoHideDuration={5000}
       onClose={this.handleClose}
       ContentProps={{
         'aria-describedby': 'message-id',
       }}
-      message={<span id="message-id">{this.state.pesan}</span>}
+      message={<span id="message-id" className={classes.pesan}>{this.state.pesan}</span>}
       action={[
         <IconButton
           key="close"

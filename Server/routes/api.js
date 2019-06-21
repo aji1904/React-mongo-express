@@ -45,36 +45,36 @@ router.post('/mahasiswa', async (req, res) => {
 
 	if (check) {
 		res.status(401).send('Data Mahasiswa Telah Tersedia')
-		res.end('Gagal')
+		console.log('Gagal')
+		return
 	}else{
 		req.body.password = bcrypt.hashSync( req.body.password , 10 )
 		const newStudent = new Student(req.body)
 		try {
 			await newStudent.save()
-			console.log('save berhasil')
 			res.status(401).send('Data Mahasiswa Telah Ditambahkan')
-			res.end('Berhasil')
+			console.log('save berhasil')
 		} catch (err) {
 			console.log('save siswa gagal', err)
 		}
 	}
 })
 
-router.post('/dosen', async ( req, res ) => {
-	const check = await Student.findOne({ nip: req.body.nip })
+router.post('/dosen', async ( req, res ) => {	
+	const check = await Lecture.findOne({ nip: req.body.nip })
 
 	if (check) {
 		res.status(401).send('Data Dosen Telah Tersedia !')
-		res.end('Gagal')
+		console.log('Gagal')
+		return
 	} else {
 		req.body.password = await bcrypt.hash( req.body.password, 10 )
 
 		const newLecture = new Lecture(req.body)
 		try {
 			await newLecture.save()
-			console.log('save dosen berhasil')
 			res.status(401).send('Data Dosen Telah Ditambahkan')
-			res.end('Berhasil')
+			console.log('save dosen berhasil')
 		} catch (error) {
 			console.log('save dosen gagal', err)
 		}
