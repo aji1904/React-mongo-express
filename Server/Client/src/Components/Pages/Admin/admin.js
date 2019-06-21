@@ -69,7 +69,7 @@ const styles = theme => ({
     color: 'white',
   },
   pesan: {
-    color: 'red',
+    color: 'white',
   }
 });
 
@@ -98,6 +98,7 @@ class LoginAdmin extends React.Component {
   handleClose = event => {
     this.setState({
       open: false,
+      pesan: '',
     })
   }
   handleSubmit = event => {
@@ -112,16 +113,23 @@ class LoginAdmin extends React.Component {
     }
 
     this.setState({
+      open: true,
       username: '',
       password: '',
-      open: true,
     })
 
     axios.post('http://localhost:4000/api/auth', auth)
       .then(res => {
+        this.setState(state => ({pesan: res.data.pesan}) )
         storage.set('logintoken', res.data.token)
-        this.props.history.push('/MenuAdmin')
       })
+      .then(res => new Promise(resolve => {
+          setTimeout(() => {
+            resolve(this.props.history.push('/MenuAdmin'));
+          }, 500);
+        })
+      )
+
       .catch( ({ response }) => {
         this.setState(state => ({ pesan: response.data }) )
       })
@@ -226,8 +234,8 @@ class LoginAdmin extends React.Component {
             horizontal: 'center',
           }}
           open={this.state.open}
-          autoHideDuration={5000}
           onClose={this.handleClose}
+          autoHideDuration={5000}
           ContentProps={{
             'aria-describedby': 'message-id',
           }}

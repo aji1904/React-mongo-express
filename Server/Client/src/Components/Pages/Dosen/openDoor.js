@@ -12,7 +12,11 @@ import SendIcon from '@material-ui/icons/Send';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+import FormControl from '@material-ui/core/FormControl';
 
 const styles = theme => ({
   root: {
@@ -58,6 +62,8 @@ class openDoor extends React.Component {
     kelas : '',
     ruangan : '',
     tanggal : '',
+    waktu: '',
+    value: '',
   } 
   handleChange = event => {
     const {name} = event.target
@@ -75,6 +81,7 @@ class openDoor extends React.Component {
       kelas: this.state.kelas,
       ruangan: this.state.ruangan,
       tanggal: this.state.tanggal,
+      waktu: this.state.waktu,
     }
 
     axios.post('http://localhost:4000/api/historydosen', historydosen)
@@ -148,24 +155,41 @@ class openDoor extends React.Component {
         <div>
           <Center>
             <TextValidator
-              id="outlined-dense"
-              label="Tanggal Hari ini"
-              className={classes.textField}
-              InputLabelProps={{
-                shrink: true,
-              }}
+              label="Lama Pinjam"
               margin="dense"
               variant="outlined"
-              style={{width : 400,}}
-              type="date"
-              name="tanggal"
-              value={this.state.tanggal}
+              style={{width : 400}}
+              type="text"
+              name="ruangan"
+              value={this.state.waktu}
               onChange={this.handleChange}
-              validators = {['required']}
-              errorMessages = {['this field is null','Contoh: 06/15/2019']}
+              validators = {['required', 'minStringLength: 5']}
+              errorMessages = {['this field is null', 'Minimal 5 Karakter. Contoh: 2 Jam']}
             />
           </Center>
         </div>
+
+        <div>
+
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="age-auto-width">this.state.value</InputLabel>
+            <Select
+              value={this.state.value}
+              onChange={this.handleChange}
+              input={<Input name="age" id="age-auto-width" />}
+              autoWidth
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={'1 Jam'}>1 Jam Pelajaran</MenuItem>
+              <MenuItem value={'2 Jam'}>2 Jam Pelajaran</MenuItem>
+              <MenuItem value={'3 Jam'}>3 Jam Pelajaran</MenuItem>
+            </Select>
+          </FormControl>
+
+        </div>
+
          <div>
             <Center>
               <Button variant="contained" type="submqit" color="primary" className={classes.button}>

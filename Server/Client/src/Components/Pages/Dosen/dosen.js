@@ -68,7 +68,7 @@ const styles = {
     color: 'white',
   },
   pesan: {
-    color: 'red',
+    color: 'white',
   }
 };
 
@@ -91,7 +91,8 @@ class LoginDosen extends React.Component {
 
   handleClose = event => {
     this.setState({
-      open: false
+      open: false,
+      pesan: '',
     })
   }
 
@@ -117,10 +118,17 @@ class LoginDosen extends React.Component {
     })
 
     axios.post('http://localhost:4000/api/auth', auth)
-      .then(res=>{
+      .then(res => {
+        this.setState(state => ({pesan : res.data.pesan}) )
         storage.set('logintoken', res.data.token)
-        this.props.history.push('/MenuDosen')
+      }) 
+      .then(res => new Promise (resolve => {
+        setTimeout( () => {
+          resolve(this.props.history.push('/MenuDosen'))
+        }, 500 )
       })
+
+      )
       .catch( ({response}) => {
         this.setState(state => ({pesan: response.data}) )
       }

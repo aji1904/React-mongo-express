@@ -91,19 +91,11 @@ class ProfileDosen extends React.Component {
 
                     <TableRow>
                       <TableCell align="left">Nama</TableCell>
-                      <TableCell align="left">Aji</TableCell>
+                      <TableCell align="left">{this.state.data.nama}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell align="left">Kelas</TableCell>
-                      <TableCell align="left">6 CB</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">Status</TableCell>
-                      <TableCell align="left">Ketua Kelas</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">Email</TableCell>
-                      <TableCell align="left">aji199804@gmail.com</TableCell>
+                      <TableCell align="left">Contact</TableCell>
+                      <TableCell align="left">{this.state.data.telepon}</TableCell>
                     </TableRow>
                 </TableBody>
               </Table>
