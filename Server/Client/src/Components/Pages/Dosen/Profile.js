@@ -13,6 +13,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {Link} from 'react-router-dom';
+import LocalStorage from 'simple-webstorage/lib/local'
+import axios from 'axios';
 
 
 const styles = theme => ({
@@ -36,6 +38,23 @@ const styles = theme => ({
 });
 
 class ProfileDosen extends React.Component {
+
+  state = {
+    data: {}
+  }
+
+  componentDidMount() {
+    const storage = LocalStorage()
+    const token = storage.get('logintoken')
+    axios.get(`http://localhost:4000/api/data/user/${token}`)
+      .then(res => {
+        console.log(res.data)
+        this.setState(state => ({data: res.data}) )
+      })
+      .catch( err => {
+        console.log(err)
+      })
+  }
 
   render() {
   const { classes } = this.props;
@@ -66,8 +85,8 @@ class ProfileDosen extends React.Component {
               <Table className={classes.table}>
                 <TableBody>
                     <TableRow>
-                      <TableCell align="left">NIM</TableCell>
-                      <TableCell align="left">Aji</TableCell>
+                      <TableCell align="left">NIP</TableCell>
+                      <TableCell align="left">{this.state.data.nip}</TableCell>
                     </TableRow>
 
                     <TableRow>

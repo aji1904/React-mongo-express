@@ -33,6 +33,7 @@ router.get('/data/user/:token', async (req, res) => {
 	const data = jwt.verify(req.params.token, 'rahasia');
 	if (data) {
 		res.status(200).send(data)
+		return
 	} else {
 		res.status(401).send('Anda tidak terautentikasi')
 	}
