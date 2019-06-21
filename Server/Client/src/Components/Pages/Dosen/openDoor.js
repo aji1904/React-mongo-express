@@ -12,11 +12,6 @@ import SendIcon from '@material-ui/icons/Send';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import FormControl from '@material-ui/core/FormControl';
 
 const styles = theme => ({
   root: {
@@ -53,6 +48,13 @@ const styles = theme => ({
   },
   textField: {
     marginBottom: 12,
+  },
+  select: {
+    fontSize: '15px',
+    padding: '14px 14px',
+    marginTop: 15,
+    width: 400,
+    borderRadius: 5,
   }
 });
 
@@ -63,13 +65,12 @@ class openDoor extends React.Component {
     ruangan : '',
     tanggal : '',
     waktu: '',
-    value: '',
   } 
   handleChange = event => {
     const {name} = event.target
 
     this.setState({
-      [name]:event.target.value
+      [name]:event.target.value,
     });
   }
   
@@ -153,41 +154,14 @@ class openDoor extends React.Component {
           </Center>
         </div>
         <div>
-          <Center>
-            <TextValidator
-              label="Lama Pinjam"
-              margin="dense"
-              variant="outlined"
-              style={{width : 400}}
-              type="text"
-              name="ruangan"
-              value={this.state.waktu}
-              onChange={this.handleChange}
-              validators = {['required', 'minStringLength: 5']}
-              errorMessages = {['this field is null', 'Minimal 5 Karakter. Contoh: 2 Jam']}
-            />
+          <Center>            
+            <select className={classes.select} name="waktu" value={this.state.waktu} onChange={this.handleChange} required>
+              <option value="">Lama Peminjaman</option>
+              <option value="1 JAM">1 JAM PELAJARAN</option>
+              <option value="2 JAM">2 JAM PELAJARAN</option>
+              <option value="3 JAM">3 JAM PELAJARAN</option>
+            </select>
           </Center>
-        </div>
-
-        <div>
-
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="age-auto-width">this.state.value</InputLabel>
-            <Select
-              value={this.state.value}
-              onChange={this.handleChange}
-              input={<Input name="age" id="age-auto-width" />}
-              autoWidth
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={'1 Jam'}>1 Jam Pelajaran</MenuItem>
-              <MenuItem value={'2 Jam'}>2 Jam Pelajaran</MenuItem>
-              <MenuItem value={'3 Jam'}>3 Jam Pelajaran</MenuItem>
-            </Select>
-          </FormControl>
-
         </div>
 
          <div>
