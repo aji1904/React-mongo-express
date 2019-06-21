@@ -124,9 +124,9 @@ class LoginAdmin extends React.Component {
         storage.set('logintoken', res.data.token)
       })
       .then(res => new Promise(resolve => {
-          setTimeout(() => {
-            resolve(this.props.history.push('/MenuAdmin'));
-          }, 500);
+          setTimeout( () => {
+            resolve(this.props.history.push('/MenuAdmin'))
+          }, 500)
         })
       )
 

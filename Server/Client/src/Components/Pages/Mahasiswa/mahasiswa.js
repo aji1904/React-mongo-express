@@ -17,6 +17,9 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import LocalStorage from 'simple-webstorage/lib/local';
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
 
  
 const styles = {
@@ -65,6 +68,9 @@ const styles = {
     outline: 'none',
     color: 'white',
   },
+  pesan: {
+    color: 'white',
+  }
 };
 
 class LoginSiswa extends React.Component {
@@ -73,6 +79,8 @@ class LoginSiswa extends React.Component {
     password: '',
     role: 'Siswa',    
     showPassword: false,
+    pesan: '',
+    open: false,
   }
 
   handleChange = event => {
@@ -87,8 +95,17 @@ class LoginSiswa extends React.Component {
     this.setState(state => ({ showPassword: !state.showPassword }));
   }
 
+  handleClose = event => {
+    this.setState({
+      pesan: '',
+      open: false,
+    })
+  }
+
   handleSubmit = event => {
     event.preventDefault();
+
+    const storage = LocalStorage();
 
     const auth = {
       nim: this.state.nim,
@@ -96,13 +113,26 @@ class LoginSiswa extends React.Component {
       role: this.state.role,
     }
 
+    this.setState({
+      open: true,
+      nim: '',
+      password: '',
+    })
+
     axios.post('http://localhost:4000/api/auth', auth)
-      .then(res=>{
-        console.log(res);
-        console.log(res.data);
+      .then(res => {
+        this.setState(state => ({pesan: res.data.pesan}) )
+        storage.set('logintoken', res.data.token)
       })
-      .catch(err=>{
-        console.error('error axios',err)
+      .then(res => new Promise(resolve => {
+          setTimeout( () => {
+            resolve(this.props.history.push('/MenuMahasiswa'))
+          }, 500)
+        })
+      )
+
+      .catch( ({ response }) => {
+        this.setState(state => ({ pesan: response.data }) )
       })
   }
 
@@ -198,6 +228,33 @@ class LoginSiswa extends React.Component {
           </div>
         </div>
         </ValidatorForm>
+
+        { /*Snackbar*/ }
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={this.state.open}
+          onClose={this.handleClose}
+          autoHideDuration={5000}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id" className={classes.pesan}>{this.state.pesan}</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={this.handleClose}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
       </div>
     );
   }

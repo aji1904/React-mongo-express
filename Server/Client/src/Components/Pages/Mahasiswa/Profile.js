@@ -13,6 +13,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {Link} from 'react-router-dom';
+import LocalStorage from 'simple-webstorage/lib/local';
+import axios from 'axios';
 
 
 const styles = theme => ({
@@ -36,6 +38,22 @@ const styles = theme => ({
 });
 
 class ProfileMahasiswa extends React.Component {
+  state = {
+    data: {}
+  }
+
+  componentDidMount() {
+    const storage = LocalStorage()
+    const token = storage.get('logintoken')
+    axios.get(`http://localhost:4000/api/data/user/${token}`)
+      .then(res => {
+        console.log(res.data)
+        this.setState(state => ({ data: res.data, pesan: res.pesan, }))
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
 
   render() {
   const { classes } = this.props;
@@ -67,24 +85,20 @@ class ProfileMahasiswa extends React.Component {
                 <TableBody>
                     <TableRow>
                       <TableCell align="left">NIM</TableCell>
-                      <TableCell align="left">Aji</TableCell>
+                      <TableCell align="left">{this.state.data.nim}</TableCell>
                     </TableRow>
 
                     <TableRow>
                       <TableCell align="left">Nama</TableCell>
-                      <TableCell align="left">Aji</TableCell>
+                      <TableCell align="left">{this.state.data.nama}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">Kelas</TableCell>
-                      <TableCell align="left">6 CB</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">Status</TableCell>
-                      <TableCell align="left">Ketua Kelas</TableCell>
+                      <TableCell align="left">{this.state.data.kelas}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell align="left">Email</TableCell>
-                      <TableCell align="left">aji199804@gmail.com</TableCell>
+                      <TableCell align="left">{this.state.data.email}</TableCell>
                     </TableRow>
                 </TableBody>
               </Table>
