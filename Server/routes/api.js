@@ -130,6 +130,7 @@ router.post('/auth',  async (req, res) => {
 				token: token,
 				pesan: 'Login Sukses'
 			})
+			return
 		} else {
 			res.status(401).send('Login Gagal, Password Anda salah!')
 		}

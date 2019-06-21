@@ -49,10 +49,7 @@ const styles = theme => ({
     marginBottom: 50,
   },
   pesan: {
-    color: '',
-  },
-  error: {
-    backgroundColor: theme.palette.error.dark,
+    color: 'red',
   },
 });
 

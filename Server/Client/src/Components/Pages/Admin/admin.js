@@ -18,6 +18,8 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import LocalStorage from 'simple-webstorage/lib/local';
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
  
 const styles = theme => ({
   root: {
@@ -68,7 +70,6 @@ const styles = theme => ({
   },
   pesan: {
     color: 'red',
-    paddingBottom: 10,
   }
 });
 
@@ -79,6 +80,7 @@ class LoginAdmin extends React.Component {
     role: 'admin',
     showPassword: false,
     pesan: '',
+    open: false,
   }
 
   handleChange = event => {
@@ -93,6 +95,11 @@ class LoginAdmin extends React.Component {
     this.setState(state => ({ showPassword: !state.showPassword }));
   }
 
+  handleClose = event => {
+    this.setState({
+      open: false,
+    })
+  }
   handleSubmit = event => {
     event.preventDefault();
 
@@ -103,6 +110,12 @@ class LoginAdmin extends React.Component {
       password: this.state.password,
       role : this.state.role
     }
+
+    this.setState({
+      username: '',
+      password: '',
+      open: true,
+    })
 
     axios.post('http://localhost:4000/api/auth', auth)
       .then(res => {
@@ -140,9 +153,6 @@ class LoginAdmin extends React.Component {
         </div>
         <ValidatorForm ref="form" onSubmit={this.handleSubmit} onError={erros => console.log(erros)}>
         <div className={classes.Container}>
-        <div>
-          <Center className={classes.pesan}>{this.state.pesan}</Center>
-        </div>
           <div>
             <Center>
               <TextValidator
@@ -207,6 +217,34 @@ class LoginAdmin extends React.Component {
           </div>
         </div>
         </ValidatorForm>
+
+        { /*Snackbar*/ }
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={this.state.open}
+          autoHideDuration={5000}
+          onClose={this.handleClose}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id" className={classes.pesan}>{this.state.pesan}</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={this.handleClose}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
+
       </div>
     );
   }
