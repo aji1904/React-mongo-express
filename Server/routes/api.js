@@ -99,10 +99,11 @@ router.post('/lab', async ( req, res ) => {
 	const newLab = new Lab(req.body)
 	try {
 		await newLab.save()
-		res.end('save lab berhasil')
+		res.status(401).send('Peminjaman LAB Selesai. Silahkan Tunggu')
+		console.log('save lab berhasil')
 	} catch (error) {
+		res.status(401).send('Peminjaman LAB Gagal.')
 		console.log('save lab gagal', err)
-		res.end('save lab gagal')
 	}
 })
 

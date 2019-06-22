@@ -95,7 +95,7 @@ class menuHistory extends React.Component {
                 </IconButton>
             </Typography>
             <Typography variant="h6" align="right" color="inherit" className={classes.Grow}>
-              Create User
+              Riwayat
             </Typography>
           </Toolbar>
         </AppBar>

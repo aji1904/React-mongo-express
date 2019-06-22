@@ -10,9 +10,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import {Link} from 'react-router-dom';
 import SendIcon from '@material-ui/icons/Send';
 import Button from '@material-ui/core/Button';
-import axios from 'axios';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-
+import LocalStorage from 'simple-webstorage/lib/local';
+import axios from 'axios';
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
 
 const styles = theme => ({
   root: {
@@ -53,7 +55,8 @@ const styles = theme => ({
   select: {
     fontSize: '15px',
     padding: '14px 14px',
-    marginTop: 15,
+    marginTop: 10,
+    marginBottom: 10,
     width: 400,
     borderRadius: 5,
   }
@@ -72,7 +75,24 @@ class openLab extends React.Component {
     pelajaran : '',
     ruangan : '',
     lamaPinjam : '',
+    data: {},
+    pesan: '',
+    open: false,
   } 
+
+  componentDidMount() {
+    const storage = LocalStorage()
+    const token = storage.get('logintoken')
+    axios.get(`http://localhost:4000/api/data/user/${token}`)
+      .then(res => {
+        console.log(res.data)
+        this.setState(state => ({ data: res.data, pesan: res.pesan, }))
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
+
   handleChange = event => {
     const {name} = event.target
 
@@ -80,13 +100,36 @@ class openLab extends React.Component {
       [name]:event.target.value
     });
   }
+
+  handleClose = event => {
+    this.setState({
+      open: false,
+      pesan: '',
+    })
+  }
+
   handleSubmit = event => {
     event.preventDefault();
 
+    this.setState({
+      nim : '',
+      nama : '',
+      kelas : '',
+      waktuMulai : '',
+      waktuSelesai : '',
+      tanggal : '',
+      namaDosen : '',
+      pelajaran : '',
+      ruangan : '',
+      lamaPinjam : '',
+      data: {},
+      open: true,
+    })
+
     const labSiswa = {
-      nim: this.state.nim,
-      nama: this.state.nama,
-      kelas: this.state.kelas,
+      nim: this.state.data.nim,
+      nama: this.state.data.nama,
+      kelas: this.state.data.kelas,
       waktuMulai: this.state.waktuMulai,
       waktuSelesai: this.state.waktuSelesai,
       tanggal : this.state.tanggal,
@@ -97,12 +140,11 @@ class openLab extends React.Component {
     }
 
     axios.post('http://localhost:4000/api/lab', labSiswa)
-      .then(res=>{
-        console.log(res);
-        console.log(res.data);
+      .then( ({response})=>{
+        this.setState(state => ({pesan: response.data}) )
       })
-      .catch(err=>{
-        console.error('error axios',err)
+      .catch( ({response})=>{
+        this.setState(state => ({pesan: response.data}) )
       })
   }
 
@@ -153,7 +195,7 @@ class openLab extends React.Component {
         </div>
         <div>
           <Center>           
-            <select className={classes.select} name="waktu" value={this.state.waktu} onChange={this.handleChange} required>
+            <select className={classes.select} name="lamaPinjam" value={this.state.waktu} onChange={this.handleChange} required>
               <option value="">Lama Peminjaman</option>
               <option value="1 JAM">1 JAM PELAJARAN</option>
               <option value="2 JAM">2 JAM PELAJARAN</option>
@@ -231,6 +273,33 @@ class openLab extends React.Component {
           </div>
         </div>
         </ValidatorForm>
+
+        { /*Snackbar*/ }
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={this.state.open}
+          autoHideDuration={5000}
+          onClose={this.handleClose}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id" className={classes.pesan}>{this.state.pesan}</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={this.handleClose}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
 
       </div>
     );
