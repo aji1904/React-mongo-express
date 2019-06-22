@@ -10,8 +10,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import {Link} from 'react-router-dom';
 import SendIcon from '@material-ui/icons/Send';
 import Button from '@material-ui/core/Button';
-import axios from 'axios';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import LocalStorage from 'simple-webstorage/lib/local';
+import axios from 'axios';
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
 
 const styles = theme => ({
   root: {
@@ -60,12 +63,43 @@ const styles = theme => ({
 
 class openDoor extends React.Component {
   state = {
+    nip: '',
     dosen : '',
     kelas : '',
     ruangan : '',
     tanggal : '',
-    waktu: '',
+    lamaBuka: '',
+    data: {},
+    pesan: '',
+    open: false,
   } 
+
+  componentDidMount() {
+    this.getDate()
+    const storage = LocalStorage()
+    const token = storage.get('logintoken')
+    axios.get(`http://localhost:4000/api/data/user/${token}`)
+      .then(res => {
+        console.log(res.data)
+        this.setState(state => ({ data: res.data}))
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  getDate = () => {
+    var tanggal = new Date().toDateString();
+    this.setState({ tanggal });
+  }
+
+  handleClose = event => {
+    this.setState({
+      open: false,
+      pesan: '',
+    })
+  }
+
   handleChange = event => {
     const {name} = event.target
 
@@ -78,20 +112,30 @@ class openDoor extends React.Component {
     event.preventDefault();
 
     const historydosen = {
-      dosen: this.state.dosen,
+      nip: this.state.data.nip, 
+      dosen: this.state.data.nama,
       kelas: this.state.kelas,
       ruangan: this.state.ruangan,
       tanggal: this.state.tanggal,
-      waktu: this.state.waktu,
+      lamaBuka: this.state.lamaBuka
     }
 
+    this.setState({
+      nip: this.state.data.nip, 
+      dosen: this.state.data.nama,
+      tanggal : this.state.tanggal,
+      kelas : '',
+      ruangan : '',
+      lamaBuka : '',
+      open: true,
+    })
+
     axios.post('http://localhost:4000/api/historydosen', historydosen)
-      .then(res=>{
-        console.log(res);
-        console.log(res.data);
+      .then( ({response}) => {
+        this.setState(state => ({pesan: response.data}) )
       })
-      .catch(err=>{
-        console.error('error axios',err)
+      .catch( ({response}) => {
+        this.setState(state => ({pesan: response.data}) )
       })
   }
 
@@ -155,7 +199,7 @@ class openDoor extends React.Component {
         </div>
         <div>
           <Center>            
-            <select className={classes.select} name="waktu" value={this.state.waktu} onChange={this.handleChange} required>
+            <select className={classes.select} name="lamaBuka" value={this.state.lamaBuka} onChange={this.handleChange} required>
               <option value="">Lama Peminjaman</option>
               <option value="1 JAM">1 JAM PELAJARAN</option>
               <option value="2 JAM">2 JAM PELAJARAN</option>
@@ -174,6 +218,33 @@ class openDoor extends React.Component {
           </div>
         </div>
       </ValidatorForm>
+
+        { /*Snackbar*/ }
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={this.state.open}
+          autoHideDuration={5000}
+          onClose={this.handleClose}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id" className={classes.pesan}>{this.state.pesan}</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={this.handleClose}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
 
       </div>
     );

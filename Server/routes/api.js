@@ -86,11 +86,11 @@ router.post('/historydosen', async ( req, res ) => {
 	const newhistorydosen = new historydosen(req.body)
 	try {
 		await newhistorydosen.save()
-		console.log( newhistorydosen )
-		res.end('save history dosen berhasil')
+		res.status(401).send('Pintu LAB Telah Terbuka')
+		console.log('save historydosen berhasil')
 	} catch (error) {
+		res.status(401).send('Peminjaman LAB Selesai. Silahkan Tunggu')
 		console.log('save history dosen gagal', err)
-		res.end('save history dosen gagal')
 	}
 })
 
