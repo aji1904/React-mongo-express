@@ -82,6 +82,7 @@ class openLab extends React.Component {
   } 
 
   componentDidMount() {
+    this.getDate()
     const storage = LocalStorage()
     const token = storage.get('logintoken')
     axios.get(`http://localhost:4000/api/data/user/${token}`)
@@ -93,6 +94,11 @@ class openLab extends React.Component {
         console.log(err)
       })
     }
+
+  getDate = () => {
+    var tanggal = new Date().toDateString();
+    this.setState({ tanggal });
+  }
 
   handleChange = event => {
     const {name} = event.target
@@ -127,9 +133,11 @@ class openLab extends React.Component {
 
 
     this.setState({
+      nim: this.state.data.nim,
+      nama: this.state.data.nama,
+      kelas: this.state.data.kelas,
       waktuMulai : '',
       waktuSelesai : '',
-      tanggal : '',
       namaDosen : '',
       pelajaran : '',
       ruangan : '',
@@ -172,6 +180,26 @@ class openLab extends React.Component {
         { /* Content Profile */ }
         <ValidatorForm ref="form" onSubmit={this.handleSubmit} onError={errors => console.log(errors)}>
         <div className={classes.Content}>
+        <div>
+          <Center>
+            <TextValidator
+              label="Waktu Sekarang"
+              className={classes.textField}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              margin="dense"
+              variant="outlined"
+              style={{width : 400}}
+              type="time"
+              name="waktuMulai"
+              value={this.state.waktuMulai}
+              onChange={this.handleChange}
+              validators = {['required']}
+              errorMessages = {['this field is null']}
+            />
+          </Center>
+        </div>
         <div>
           <Center>
             <TextValidator
