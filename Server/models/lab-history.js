@@ -4,7 +4,7 @@ const LabSchema = new Schema({
     nim : String,
     nama : String,
     kelas : String,
-    watuMulai : String,
+    waktuMulai : String,
     waktuSelesai : String,
     tanggal : String,
     namaDosen : String,

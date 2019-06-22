@@ -16,6 +16,7 @@ import axios from 'axios';
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 
+
 const styles = theme => ({
   root: {
     backgroundColor: 'white',
@@ -86,7 +87,7 @@ class openLab extends React.Component {
     axios.get(`http://localhost:4000/api/data/user/${token}`)
       .then(res => {
         console.log(res.data)
-        this.setState(state => ({ data: res.data, pesan: res.pesan, }))
+        this.setState(state => ({ data: res.data}))
       })
       .catch(err => {
         console.log(err)
@@ -111,21 +112,6 @@ class openLab extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    this.setState({
-      nim : '',
-      nama : '',
-      kelas : '',
-      waktuMulai : '',
-      waktuSelesai : '',
-      tanggal : '',
-      namaDosen : '',
-      pelajaran : '',
-      ruangan : '',
-      lamaPinjam : '',
-      data: {},
-      open: true,
-    })
-
     const labSiswa = {
       nim: this.state.data.nim,
       nama: this.state.data.nama,
@@ -139,6 +125,18 @@ class openLab extends React.Component {
       lamaPinjam : this.state.lamaPinjam,
     }
 
+
+    this.setState({
+      waktuMulai : '',
+      waktuSelesai : '',
+      tanggal : '',
+      namaDosen : '',
+      pelajaran : '',
+      ruangan : '',
+      lamaPinjam : '',
+      open: true,
+    })
+
     axios.post('http://localhost:4000/api/lab', labSiswa)
       .then( ({response})=>{
         this.setState(state => ({pesan: response.data}) )
@@ -146,6 +144,7 @@ class openLab extends React.Component {
       .catch( ({response})=>{
         this.setState(state => ({pesan: response.data}) )
       })
+
   }
 
   render() {
