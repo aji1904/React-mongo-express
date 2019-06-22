@@ -49,7 +49,7 @@ const styles = theme => ({
     marginBottom: 50,
   },
   pesan: {
-    color: 'red',
+    color: 'white',
   },
 });
 
@@ -76,6 +76,7 @@ class createUser extends React.Component {
   handleClose = event => {
     this.setState({
       open: false,
+      pesan: '',
     })
   }
 

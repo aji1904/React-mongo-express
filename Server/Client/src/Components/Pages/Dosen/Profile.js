@@ -97,6 +97,10 @@ class ProfileDosen extends React.Component {
                       <TableCell align="left">Contact</TableCell>
                       <TableCell align="left">{this.state.data.telepon}</TableCell>
                     </TableRow>
+                    <TableRow>
+                      <TableCell align="left">Email</TableCell>
+                      <TableCell align="left">{this.state.data.email}</TableCell>
+                    </TableRow>
                 </TableBody>
               </Table>
             </Paper>

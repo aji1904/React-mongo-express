@@ -5,6 +5,7 @@ const LectureSchema = new Schema({
     password: String,
     nama: String,
     telepon: String,
+    email: String,
 },{ versionKey: false })
 
 module.exports = model('Lecture', LectureSchema)

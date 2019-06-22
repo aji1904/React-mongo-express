@@ -49,7 +49,7 @@ const styles = theme => ({
     marginBottom: 50,
   },
   pesan: {
-    color: 'red',
+    color: 'white',
   }
 });
 
@@ -59,6 +59,7 @@ class createDosen extends React.Component {
     password : '',
     nama : '',
     telepon : '',
+    email: '',
     pesan: '',
     open: false,
   } 
@@ -74,6 +75,7 @@ class createDosen extends React.Component {
   handleClose = event => {
     this.setState({
       open: false,  
+      pesan: '',
     })
   }
 
@@ -85,6 +87,7 @@ class createDosen extends React.Component {
       password: this.state.password,
       nama: this.state.nama,
       telepon: this.state.telepon,
+      email: this.state.email
     }
 
     this.setState({
@@ -92,6 +95,7 @@ class createDosen extends React.Component {
       password : '',
       nama : '',
       telepon : '',
+      email: '',
       open: true,
     })
 
@@ -177,6 +181,23 @@ class createDosen extends React.Component {
               onChange={this.handleChange}
               validators = {['required', 'minStringLength: 6']}
               errorMessages = {['this field is null', 'Minimal 6 Karakter.']}
+            />
+          </Center>
+        </div> 
+        <div>
+          <Center>
+            <TextValidator
+              label="Email Dosen"
+              className={classes.textField}
+              margin="dense"
+              variant="outlined"
+              style={{width : 400}}
+              type="email"
+              name="email"
+              value={this.state.email}
+              onChange={this.handleChange}
+              validators = {['required', 'minStringLength: 6', 'isEmail']}
+              errorMessages = {['this field is null', 'Contoh: Dosen1@gmail.com']}
             />
           </Center>
         </div>

@@ -50,6 +50,13 @@ const styles = theme => ({
   textField: {
     marginBottom: 12,
   },
+  select: {
+    fontSize: '15px',
+    padding: '14px 14px',
+    marginTop: 15,
+    width: 400,
+    borderRadius: 5,
+  }
 });
 
 class openLab extends React.Component {
@@ -145,24 +152,13 @@ class openLab extends React.Component {
           </Center>
         </div>
         <div>
-          <Center>
-            <TextValidator
-              id="outlined-dense"
-              label="Lama Pinjam"
-              className={classes.textField}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              margin="dense"
-              variant="outlined"
-              style={{width : 400}}
-              type="text"
-              name="lamaPinjam"
-              value={this.state.lamaPinjam}
-              onChange={this.handleChange}
-              validators = {['required','minStringLength: 5']}
-              errorMessages = {['this field is null','Minimal 5 Karakter. Contoh: 2 JAM']}
-            />
+          <Center>           
+            <select className={classes.select} name="waktu" value={this.state.waktu} onChange={this.handleChange} required>
+              <option value="">Lama Peminjaman</option>
+              <option value="1 JAM">1 JAM PELAJARAN</option>
+              <option value="2 JAM">2 JAM PELAJARAN</option>
+              <option value="3 JAM">3 JAM PELAJARAN</option>
+            </select>
           </Center>
         </div>
         <div>
