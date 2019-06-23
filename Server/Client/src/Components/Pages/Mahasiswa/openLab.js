@@ -34,7 +34,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   Content: {
-    marginTop: 50,
+    marginTop: 85,
     [theme.breakpoints.down('xs')]: {
       marginTop: 15,
       marginBottom: 50,
@@ -162,7 +162,7 @@ class openLab extends React.Component {
       <div className={classes.root}>
 
         { /* Navbar*/} 
-        <AppBar position="static" color="primary">
+        <AppBar position="fixed" color="primary">
           <Toolbar>            
             <Typography variant="h6" color="inherit" align="left" className={classes.Grow}>
               <IconButton color="inherit" className={classes.IconButton} to="/MenuMahasiswa" component={Link} >

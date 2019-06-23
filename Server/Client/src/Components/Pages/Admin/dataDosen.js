@@ -14,9 +14,9 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
-import Grid from '@material-ui/core/Grid';
 import PeopleIcon from '@material-ui/icons/Person';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Paper from '@material-ui/core/Paper';
 
 const styles = {
   root: {
@@ -26,8 +26,8 @@ const styles = {
     flexGrow: 1,
   },
   paper: {
-    marginTop: 50,
-    width: 'auto',
+    marginTop: 70,
+    width: 500,
     overflowX: 'auto',
   },
   Content: {
@@ -44,7 +44,7 @@ class dataDosen extends React.Component {
       <div className={classes.root}>
 
         { /* Navbar */ }
-        <AppBar position="static" color="primary">
+        <AppBar position="fixed" color="primary">
           <Toolbar>
           <Typography variant="h6" color="inherit" align="left" className={classes.Grow}>
               <IconButton color="inherit" className={classes.IconButton} to="/MenuData" component={Link} >
@@ -54,7 +54,7 @@ class dataDosen extends React.Component {
                 </IconButton>
             </Typography>
             <Typography variant="h6" color="inherit" align="right" className={classes.Grow}>
-              Data
+              Data Dosen
             </Typography>
           </Toolbar>
         </AppBar>
@@ -62,10 +62,7 @@ class dataDosen extends React.Component {
         { /* Content Room */ }
         <div className={classes.Content}>
           <Center>
-             <Grid item xs={12} md={6}>
-              <Typography variant="h6" className={classes.title}>
-                Daftar Data Dosen
-              </Typography>
+            <Paper className={classes.paper}>
               <div className={classes.demo}>
                 <List dense={dense}>
                     <ListItem>
@@ -76,7 +73,7 @@ class dataDosen extends React.Component {
                       </ListItemAvatar>
                       <ListItemText
                         primary="Dosen A"
-                        secondary={secondary ? 'Secondary text' : null}
+                        secondary={secondary ? 'Secondary text' : 'nim dosen'}
                       />
                       <ListItemSecondaryAction>
                         <IconButton edge="end" aria-label="Delete">
@@ -94,7 +91,7 @@ class dataDosen extends React.Component {
                       </ListItemAvatar>
                       <ListItemText
                         primary="Dosen A"
-                        secondary={secondary ? 'Secondary text' : null}
+                        secondary={secondary ? 'Secondary text' : 'nim dosen'}
                       />
                       <ListItemSecondaryAction>
                         <IconButton edge="end" aria-label="Delete">
@@ -104,7 +101,7 @@ class dataDosen extends React.Component {
                     </ListItem>
                 </List>
               </div>
-            </Grid>
+            </Paper>
           </Center>
         </div>
 

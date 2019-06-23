@@ -95,7 +95,7 @@ class Profile extends React.Component {
                 </IconButton>
             </Typography>
             <Typography variant="h6" align="right" color="inherit" className={classes.Grow}>
-              Create User
+              Data User
             </Typography>
           </Toolbar>
         </AppBar>
