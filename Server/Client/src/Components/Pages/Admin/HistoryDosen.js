@@ -14,6 +14,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import axios from 'axios';
 
 const styles = {
   root: {
@@ -23,7 +24,7 @@ const styles = {
     flexGrow: 1,
   },
   paper: {
-    marginTop: 50,
+    marginTop: 70,
     width: 'auto',
     overflowX: 'auto',
   },
@@ -33,7 +34,20 @@ const styles = {
 };
 
 class HistoryDosen extends React.Component {
+  state = {
+    data: [],
+  }
 
+  componentDidMount() {
+    axios.get(`http://localhost:4000/api/data/histori/dosen`)
+      .then(res => {
+        console.log(res.data)
+        this.setState(state => ({data: res.data }) )
+      })
+      .catch( err => {
+        console.log(err)
+      })
+  }
   render() {
   const { classes } = this.props;
 
@@ -41,7 +55,7 @@ class HistoryDosen extends React.Component {
       <div className={classes.root}>
 
         { /* Navbar */ }
-        <AppBar position="static" color="primary">
+        <AppBar position="fixed" color="primary">
           <Toolbar>
           <Typography variant="h6" color="inherit" align="left" className={classes.Grow}>
               <IconButton color="inherit" className={classes.IconButton} to="/MenuHistory" component={Link} >
@@ -63,22 +77,26 @@ class HistoryDosen extends React.Component {
               <Table className={classes.table}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>NAMA DOSEN</TableCell>
-                    <TableCell>LAMA PINJAM</TableCell>
-                    <TableCell>KELAS</TableCell>
-                    <TableCell>RUANG</TableCell>
+                    <TableCell>NIP_DOSEN</TableCell>
+                    <TableCell>NAMA_DOSEN</TableCell>
+                    <TableCell>RUANGAN</TableCell>
                     <TableCell>TANGGAL</TableCell>
+                    <TableCell>LAMA_BUKA</TableCell>
+                    <TableCell>KELAS</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
-                    <TableRow>
-                      <TableCell>Aji</TableCell>
-                      <TableCell>2 JAM</TableCell>
-                      <TableCell>6 CB</TableCell>
-                      <TableCell>LAB 3</TableCell>
-                      <TableCell>20 mei 2019</TableCell>
-                    </TableRow>
-                </TableBody>
+                {this.state.data.map( (item, key) =>
+                  <React.Fragment>
+                     <TableBody>
+                      <TableCell key={key}>{item.nip}</TableCell>
+                      <TableCell key={key}>{item.dosen}</TableCell>
+                      <TableCell key={key}>{item.ruangan}</TableCell>
+                      <TableCell key={key}>{item.tanggal}</TableCell>
+                      <TableCell key={key}>{item.lamaBuka}</TableCell>
+                      <TableCell key={key}>{item.kelas}</TableCell>
+                    </TableBody>  
+                  </React.Fragment>
+                )}
               </Table>
             </Paper>
           </Center>

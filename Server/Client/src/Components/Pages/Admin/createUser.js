@@ -195,13 +195,22 @@ class createUser extends React.Component {
             />
           </Center>
         </div>
+
         <div>
-          <Center>            
-            <select className={classes.select} name="kelas" value={this.state.waktu} onChange={this.handleChange} required>
-              <option value="">Pilih Kelas</option>
-              <option value="Kelas Pagi">KELAS PAGI</option>
-              <option value="Kelas Siang">KELAS SIANG</option>
-            </select>
+          <Center>
+            <TextValidator
+              label="Kelas Siswa"
+              className={classes.textField}
+              margin="dense"
+              variant="outlined"
+              value={this.state.kelas}
+              onChange={this.handleChange}
+              style={{width : 400}}
+              type="text"
+              name="kelas"
+              validators = {['required', 'minStringLength: 4']}
+              errorMessages = {['this field is null', 'Contoh: 6 CB.']}
+            />
           </Center>
         </div>
         <div>

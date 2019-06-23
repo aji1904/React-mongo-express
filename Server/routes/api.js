@@ -40,6 +40,29 @@ router.get('/data/user/:token', async (req, res) => {
 	res.end()
 })
 
+router.get('/data/histori/mahasiswa', async (req, res) => {
+	const data = await Lab.find()
+
+	if (data) {
+		console.log('data ditemukan')
+		res.status(200).send(data)
+		return
+	} else {
+		res.status(200).send('Data Belum Tersedia')
+	}
+})
+
+router.get('/data/histori/dosen', async (req, res) => {
+	const data = await historydosen.find()
+
+	if (data) {
+		console.log('data ditemukan')
+		res.status(200).send(data)
+		return
+	} else {
+		res.status(200).send('Data Belum Tersedia')
+	}
+})
 
 router.post('/mahasiswa', async (req, res) => {
 	const check = await Student.findOne({ nim: req.body.nim })
@@ -143,6 +166,7 @@ router.post('/auth',  async (req, res) => {
 	res.end()
 
 })
+
 
 module.exports = router
 

@@ -14,6 +14,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import axios from 'axios';
 
 const styles = {
   root: {
@@ -23,7 +24,7 @@ const styles = {
     flexGrow: 1,
   },
   paper: {
-    marginTop: 50,
+    marginTop: 70,
     width: 'auto',
     overflowX: 'auto',
   },
@@ -33,6 +34,20 @@ const styles = {
 };
 
 class HistorySiswa extends React.Component {
+  state = {
+    data: [],
+  }
+
+  componentDidMount() {
+    axios.get(`http://localhost:4000/api/data/histori/mahasiswa`)
+      .then(res => {
+        console.log(res.data)
+        this.setState(state => ({data: res.data }) )
+      })
+      .catch( err => {
+        console.log(err)
+      })
+  }
 
   render() {
   const { classes } = this.props;
@@ -41,7 +56,7 @@ class HistorySiswa extends React.Component {
       <div className={classes.root}>
 
         { /* Navbar */ }
-        <AppBar position="static" color="primary">
+        <AppBar position="fixed" color="primary">
           <Toolbar>
           <Typography variant="h6" color="inherit" align="left" className={classes.Grow}>
               <IconButton color="inherit" className={classes.IconButton} to="/MenuHistory" component={Link} >
@@ -51,7 +66,7 @@ class HistorySiswa extends React.Component {
                 </IconButton>
             </Typography>
             <Typography variant="h6" color="inherit" align="right" className={classes.Grow}>
-              History
+              History Mahasiswa
             </Typography>
           </Toolbar>
         </AppBar>
@@ -63,26 +78,34 @@ class HistorySiswa extends React.Component {
               <Table className={classes.table}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>NIM</TableCell>
-                    <TableCell>NAMA SISWA</TableCell>
+                    <TableCell>NIM_SISWA</TableCell>
+                    <TableCell>NAMA_SISWA</TableCell>
                     <TableCell>KELAS</TableCell>
-                    <TableCell>NAMA DOSEN</TableCell>
-                    <TableCell>LAMA PINJAM</TableCell>
-                    <TableCell>RUANG</TableCell>
-                    <TableCell>TANGGAL</TableCell>
+                    <TableCell>NAMA_DOSEN</TableCell>
+                    <TableCell>WAKTU_AWAL</TableCell>
+                    <TableCell>WAKTU_SELESAI</TableCell>
+                    <TableCell>TANGGAL_PINJAM</TableCell>
+                    <TableCell>PELAJARAN</TableCell>
+                    <TableCell>RUANGAN</TableCell>
+                    <TableCell>LAMA_PINJAM</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
-                    <TableRow>
-                      <TableCell>061630700529</TableCell>
-                      <TableCell>Aji</TableCell>
-                      <TableCell>6 CB</TableCell>
-                      <TableCell>DOSEN 1</TableCell>
-                      <TableCell>2 JAM</TableCell>
-                      <TableCell>LAB 3</TableCell>
-                      <TableCell>20 mei 2019</TableCell>
-                    </TableRow>
-                </TableBody>
+                {this.state.data.map( (item, key) =>
+                  <React.Fragment>
+                     <TableBody>
+                      <TableCell key={key}>{item.nim}</TableCell>
+                      <TableCell key={key}>{item.nama}</TableCell>
+                      <TableCell key={key}>{item.kelas}</TableCell>
+                      <TableCell key={key}>{item.namaDosen}</TableCell>
+                      <TableCell key={key}>{item.waktuMulai}</TableCell>
+                      <TableCell key={key}>{item.waktuSelesai}</TableCell>
+                      <TableCell key={key}>{item.tanggal}</TableCell>
+                      <TableCell key={key}>{item.pelajaran}</TableCell>
+                      <TableCell key={key}>{item.ruangan}</TableCell>
+                      <TableCell key={key}>{item.lamaPinjam}</TableCell>
+                    </TableBody>  
+                  </React.Fragment>
+                )}
               </Table>
             </Paper>
           </Center>
