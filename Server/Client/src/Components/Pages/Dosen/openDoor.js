@@ -120,6 +120,13 @@ class openDoor extends React.Component {
       lamaBuka: this.state.lamaBuka
     }
 
+    const data_log = {
+      filed: this.state.data.nip, 
+      nama: this.state.data.nama,
+      status_pintu: this.state.kelas,
+      tanggal: this.state.tanggal,
+    }
+
     this.setState({
       nip: this.state.data.nip, 
       dosen: this.state.data.nama,
@@ -130,7 +137,7 @@ class openDoor extends React.Component {
       open: true,
     })
 
-    axios.post('http://localhost:4000/api/historydosen', historydosen)
+    axios.post('http://192.168.43.182:4000/api/historydosen', historydosen)
       .then( ({response}) => {
         this.setState(state => ({pesan: response.data}) )
       })

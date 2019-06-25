@@ -4,6 +4,7 @@ const Student = require('../models/mahasiswa')
 const Lecture = require('../models/dosen')
 const Lab = require('../models/lab-history')
 const historydosen = require('../models/history-dosen')
+const LOG_DATA = require('../models/data')
 const router = Router()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
@@ -58,9 +59,35 @@ router.get('/data/histori/dosen', async (req, res) => {
 	if (data) {
 		console.log('data ditemukan')
 		res.status(200).send(data)
-		return
 	} else {
 		res.status(200).send('Data Belum Tersedia')
+	}
+})
+
+router.post('/lab', async ( req, res ) => { //menyimpan data
+	
+	const newLab = new Lab(req.body)
+	try {
+		await newLab.save()
+		res.status(401).send('Peminjaman LAB Selesai. Silahkan Tunggu')
+		console.log('save lab berhasil')
+	} catch (error) {
+		res.status(401).send('Peminjaman LAB Gagal.')
+		console.log('save lab gagal', err)
+	}
+})
+
+router.get('/data/histori/lab', async (req, res) => { //mengambil data
+	const dataLab = await LOG_DATA.find().sort({'_id':-1}).limit(1)
+
+	if (dataLab) {
+		res.json({
+			data:dataLab
+		})
+	} else {
+		res.json({
+			data:"Gagal"
+		})
 	}
 })
 
@@ -129,6 +156,7 @@ router.post('/lab', async ( req, res ) => {
 		console.log('save lab gagal', err)
 	}
 })
+
 
 router.post('/auth',  async (req, res) => {
 	let model = null
