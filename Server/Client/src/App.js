@@ -19,6 +19,7 @@ import MenuHistory from './Components/Pages/Admin/menuHistory';
 import MenuData from './Components/Pages/Admin/menuData';
 import openDoor from './Components/Pages/Dosen/openDoor';
 import openLab from './Components/Pages/Mahasiswa/openLab';
+import closeLab from './Components/Pages/Mahasiswa/tutup';
 import {BrowserRouter, Route,} from 'react-router-dom';
 import dataDosen from './Components/Pages/Admin/dataDosen';
 import dataSiswa from './Components/Pages/Admin/dataSiswa';
@@ -51,6 +52,7 @@ class App extends React.Component {
           <Route path="/openLab" exact={true} component={openLab} />
           <Route path="/dataDosen" exact={true} component={dataDosen} />
           <Route path="/dataSiswa" exact={true} component={dataSiswa} />
+          <Route path="/closeLab" exact={true} component={closeLab} />
 
       	</React.Fragment>
       </BrowserRouter>

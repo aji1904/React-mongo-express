@@ -5,6 +5,7 @@ const DataSchema = new Schema({
     nama: String,
     status_pintu: String,
     tanggal: String,
+    ruangan: String,
 },{ versionKey: false })
 
-module.exports = model('Lecture', LectureSchema)
+module.exports = model('data_log', DataSchema)

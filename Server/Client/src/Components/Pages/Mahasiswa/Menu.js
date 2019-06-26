@@ -12,6 +12,11 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import LocalStorage from 'simple-webstorage/lib/local';
 
 const styles = theme => ({
   root: {
@@ -74,9 +79,40 @@ const styles = theme => ({
 })
 
 
-function MenuMahasiswa(props) {
-  const { classes } = props;
+class MenuMahasiswa extends React.Component {
+  state = {
+    open: false,
+  }
 
+  handleClose = event => {
+    this.setState({
+      open: false,
+    })
+  }
+
+  handleClickOpen = event => {
+    this.setState({
+      open: true,
+    })
+  }
+
+  handleClickOut = event => {
+    event.preventDefault();
+
+    const storage = LocalStorage()
+    storage.remove('logintoken')
+    this.props.history.push('/')
+
+    this.setState({
+      open: false,
+    })
+
+
+  }
+
+  render() {
+  const { classes } = this.props;
+  
   return (
     <div className={classes.root}>
       <AppBar position="fixed">
@@ -84,7 +120,7 @@ function MenuMahasiswa(props) {
           <Typography variant="h6" align="left" color="inherit" className={classes.grow}>
             Menu Siswa
           </Typography>
-          <IconButton color="inherit" align="right" className={classes.IconButton} to="/" component={Link}>
+          <IconButton color="inherit" align="right" className={classes.IconButton} onClick={this.handleClickOpen}>
             <Icon className={classes.icon}>
               logout
             </Icon>
@@ -125,9 +161,45 @@ function MenuMahasiswa(props) {
             Pinjam Lab
           </Button>
         </Card>
+        <Card className={classes.Card}>
+          <img src={imgRoom} alt="buka pintu" className={classes.img}/>
+          <Button
+            to="/closeLab"
+            component={Link}
+            variant="contained"
+            disableRipple
+            color="secondary"
+            className={classes.Button}
+          >
+            Tutup Lab
+          </Button>
+        </Card>
       </Grid>
+
+    { /* dialog button */}
+      <Dialog
+        open={this.state.open}
+        onClose={this.handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description" align="center">
+            Apakah anda yakin ingin keluar dari Aplikasi ini
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.handleClose} color="primary">
+            Tidak
+          </Button>
+          <Button onClick={this.handleClickOut} color="primary" autoFocus>
+            Iya
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
+  }
 }
 
 MenuMahasiswa.propTypes = {

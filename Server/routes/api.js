@@ -4,7 +4,7 @@ const Student = require('../models/mahasiswa')
 const Lecture = require('../models/dosen')
 const Lab = require('../models/lab-history')
 const historydosen = require('../models/history-dosen')
-const LOG_DATA = require('../models/data')
+const Log_data = require('../models/data')
 const router = Router()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
@@ -42,7 +42,7 @@ router.get('/data/user/:token', async (req, res) => {
 })
 
 router.get('/data/histori/mahasiswa', async (req, res) => {
-	const data = await Lab.find()
+	const data = await Lab.find().sort({'_id':-1})
 
 	if (data) {
 		console.log('data ditemukan')
@@ -64,21 +64,19 @@ router.get('/data/histori/dosen', async (req, res) => {
 	}
 })
 
-router.post('/lab', async ( req, res ) => { //menyimpan data
+router.post('/data/datalog', async ( req, res ) => { //menyimpan data
 	
-	const newLab = new Lab(req.body)
+	const newData = new Log_data(req.body)
 	try {
-		await newLab.save()
-		res.status(401).send('Peminjaman LAB Selesai. Silahkan Tunggu')
-		console.log('save lab berhasil')
+		await newData.save()
+		console.log('save berhasil')
 	} catch (error) {
-		res.status(401).send('Peminjaman LAB Gagal.')
-		console.log('save lab gagal', err)
+		console.log('save gagal', error)
 	}
 })
 
 router.get('/data/histori/lab', async (req, res) => { //mengambil data
-	const dataLab = await LOG_DATA.find().sort({'_id':-1}).limit(1)
+	const dataLab = await Log_data.find().sort({'_id':-1}).limit(1)
 
 	if (dataLab) {
 		res.json({

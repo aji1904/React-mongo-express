@@ -33,7 +33,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   Content: {
-    marginTop: 80,
+    marginTop: 100,
     [theme.breakpoints.down('xs')]: {
       marginTop: 80,
       marginBottom: 50,
@@ -63,12 +63,9 @@ const styles = theme => ({
 
 class openDoor extends React.Component {
   state = {
-    nip: '',
-    dosen : '',
-    kelas : '',
+    nama : '',
     ruangan : '',
     tanggal : '',
-    lamaBuka: '',
     data: {},
     pesan: '',
     open: false,
@@ -111,15 +108,6 @@ class openDoor extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    const historydosen = {
-      nip: this.state.data.nip, 
-      dosen: this.state.data.nama,
-      kelas: this.state.kelas,
-      ruangan: this.state.ruangan,
-      tanggal: this.state.tanggal,
-      lamaBuka: this.state.lamaBuka
-    }
-
     const data_log = {
       field: '1', 
       nama: this.state.data.nama,
@@ -129,25 +117,17 @@ class openDoor extends React.Component {
     }
 
     this.setState({
-      nip: this.state.data.nip, 
-      dosen: this.state.data.nama,
+      field: '1', 
+      nama: this.state.data.nama,
       tanggal : this.state.tanggal,
-      kelas : '',
+      status_pintu : 'tertutup',
       ruangan : '',
-      lamaBuka : '',
       open: true,
     })
 
-    axios.post('http://localhost:4000/api/historydosen', historydosen)
-      .then( ({response}) => {
-        this.setState(state => ({pesan: response.data}) )
-      })
-      .catch( ({response}) => {
-        this.setState(state => ({pesan: response.data}) )
-      })
-
     axios.post('http://localhost:4000/api/data/datalog', data_log)
       .then( res => {
+        console.log(data_log)
         console.log('berhasil')
       })
       .catch( res => {
@@ -165,7 +145,7 @@ class openDoor extends React.Component {
         <AppBar position="fixed" color="primary">
           <Toolbar>            
             <Typography variant="h6" color="inherit" align="left" className={classes.Grow}>
-              <IconButton color="inherit" className={classes.IconButton} to="/MenuDosen" component={Link} >
+              <IconButton color="inherit" className={classes.IconButton} to="/MenuMahasiswa" component={Link} >
                   <Icon className={classes.icon} >
                     arrow_back
                   </Icon>
@@ -183,23 +163,6 @@ class openDoor extends React.Component {
         <div>
           <Center>
             <TextValidator
-              label="Kelas Siswa"
-              className={classes.textField}
-              margin="dense"
-              variant="outlined"
-              style={{width : 400}}
-              type="text"
-              name="kelas"
-              value={this.state.kelas}
-              onChange={this.handleChange}
-              validators = {['required', 'minStringLength: 4']}
-              errorMessages = {['this field is null', 'Minimal 4 Karakter. Contoh: 6 CB']}
-            />
-          </Center>
-        </div>
-        <div>
-          <Center>
-            <TextValidator
               label="Ruang LAB"
               margin="dense"
               variant="outlined"
@@ -213,21 +176,11 @@ class openDoor extends React.Component {
             />
           </Center>
         </div>
-        <div>
-          <Center>            
-            <select className={classes.select} name="lamaBuka" value={this.state.lamaBuka} onChange={this.handleChange} required>
-              <option value="">Lama Peminjaman</option>
-              <option value="1 JAM">1 JAM PELAJARAN</option>
-              <option value="2 JAM">2 JAM PELAJARAN</option>
-              <option value="3 JAM">3 JAM PELAJARAN</option>
-            </select>
-          </Center>
-        </div>
-
+      
          <div>
             <Center>
               <Button variant="contained" type="submqit" color="primary" className={classes.button}>
-                  Buka Lab
+                  Tutup Lab
                 <SendIcon className={classes.rightIcon} style={{paddingLeft: 10,}}/>
               </Button>
             </Center>
@@ -248,7 +201,7 @@ class openDoor extends React.Component {
           ContentProps={{
             'aria-describedby': 'message-id',
           }}
-          message={<span id="message-id" className={classes.pesan}>{this.state.pesan}</span>}
+          message={<span id="message-id" className={classes.pesan}>Pintu LAB Sudah Tertutup</span>}
           action={[
             <IconButton
               key="close"
