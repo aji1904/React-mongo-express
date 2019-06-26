@@ -106,6 +106,7 @@ class LoginSiswa extends React.Component {
     event.preventDefault();
 
     const storage = LocalStorage();
+    
 
     const auth = {
       nim: this.state.nim,
