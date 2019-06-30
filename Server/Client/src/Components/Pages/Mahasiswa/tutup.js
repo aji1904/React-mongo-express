@@ -109,15 +109,15 @@ class openDoor extends React.Component {
     event.preventDefault();
 
     const data_log = {
-      field: '1', 
+      field: '0', 
       nama: this.state.data.nama,
-      status_pintu: 'terbuka',
+      status_pintu: 'tertutup',
       tanggal: this.state.tanggal,
       ruangan: this.state.ruangan,
     }
 
     this.setState({
-      field: '1', 
+      field: '0', 
       nama: this.state.data.nama,
       tanggal : this.state.tanggal,
       status_pintu : 'tertutup',
@@ -127,7 +127,6 @@ class openDoor extends React.Component {
 
     axios.post('http://localhost:4000/api/data/datalog', data_log)
       .then( res => {
-        console.log(data_log)
         console.log('berhasil')
       })
       .catch( res => {
@@ -152,7 +151,7 @@ class openDoor extends React.Component {
                 </IconButton>
             </Typography>
             <Typography variant="h6" align="right" color="inherit" className={classes.Grow}>
-              Buka Pintu
+              Tutup Pintu
             </Typography>
           </Toolbar>
         </AppBar>

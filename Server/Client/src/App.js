@@ -22,37 +22,47 @@ import openLab from './Components/Pages/Mahasiswa/openLab';
 import closeLab from './Components/Pages/Mahasiswa/tutup';
 import {BrowserRouter, Route,} from 'react-router-dom';
 import dataDosen from './Components/Pages/Admin/dataDosen';
+import {AuthRoute} from 'react-router-auth';
 import dataSiswa from './Components/Pages/Admin/dataSiswa';
 
 class App extends React.Component {
-	
+
   render() {
+
+    const isAuthenticated = 
+      localStorage.getItem("logintoken") !== null && typeof localStorage.getItem("logintoken") !== "undefined" 
+   
     return (
       <BrowserRouter>	
     		<React.Fragment>
+
 	    		<Route path="/" exact={true} component={Index} />
 	    		<Route path="/LoginAdmin" exact={true} component={LoginAdmin} />
           <Route path="/LoginMahasiswa" exact={true} component={LoginMahasiswa} />
 	    		<Route path="/LoginDosen" exact={true} component={LoginDosen} />
-          <Route path="/MenuAdmin" exact={true} component={MenuAdmin} />
-          <Route path="/MenuDosen" exact={true} component={MenuDosen} />
-          <Route path="/MenuMahasiswa" exact={true} component={MenuMahasiswa} />
-          <Route path="/MenuHistory" exact={true} component={MenuHistory} />
-          <Route path="/MenuData" exact={true} component={MenuData} />
-          <Route path="/ProfileAdmin" exact={true} component={ProfileAdmin} />
-          <Route path="/ProfileDosen" exact={true} component={ProfileDosen} />
-          <Route path="/ProfileSiswa" exact={true} component={ProfileSiswa} />
-          <Route path="/HistoryAdminSiswa" exact={true} component={HistoryAdminSiswa} />
-          <Route path="/HistoryAdminDosen" exact={true} component={HistoryAdminDosen} />
-          <Route path="/HistoryDosen" exact={true} component={HistoryDosen} />
-          <Route path="/CreateUser" exact={true} component={CreateUser} />
-          <Route path="/createSiswa" exact={true} component={createSiswa} />
-          <Route path="/createDosen" exact={true} component={createDosen} />
-          <Route path="/openDoor" exact={true} component={openDoor} />
-          <Route path="/openLab" exact={true} component={openLab} />
-          <Route path="/dataDosen" exact={true} component={dataDosen} />
-          <Route path="/dataSiswa" exact={true} component={dataSiswa} />
-          <Route path="/closeLab" exact={true} component={closeLab} />
+          
+          <AuthRoute path="/MenuAdmin" redirectTo="/LoginAdmin" exact={true} component={MenuAdmin} authenticated={isAuthenticated}/>
+          
+          <AuthRoute path="/MenuDosen" redirectTo="/LoginDosen" exact={true} component={MenuDosen} authenticated={isAuthenticated}/>
+          <AuthRoute path="/ProfileDosen" redirectTo="/LoginDosen" exact={true} component={ProfileDosen} authenticated={isAuthenticated}/>
+          <AuthRoute path="/HistoryDosen" redirectTo="/LoginDosen" exact={true} component={HistoryDosen} authenticated={isAuthenticated}/>
+          <AuthRoute path="/openLab" redirectTo="/LoginDosen" exact={true} component={openLab} authenticated={isAuthenticated}/>
+
+          <AuthRoute path="/MenuMahasiswa" redirectTo="/LoginMahasiswa"  exact={true} component={MenuMahasiswa} authenticated={isAuthenticated}/>
+          <AuthRoute path="/ProfileSiswa" redirectTo="/LoginMahasiswa" exact={true} component={ProfileSiswa} authenticated={isAuthenticated}/>
+          <AuthRoute path="/closeLab" redirectTo="/LoginMahasiswa" exact={true} component={closeLab} authenticated={isAuthenticated}/>
+          <AuthRoute path="/openDoor" redirectTo="/LoginMahasiswa" exact={true} component={openDoor} authenticated={isAuthenticated}/>
+          
+          <AuthRoute path="/HistoryAdminDosen" redirectTo="/LoginAdmin"  exact={true} component={HistoryAdminDosen}  authenticated={isAuthenticated}/>
+          <AuthRoute path="/ProfileAdmin" redirectTo="/LoginAdmin"  exact={true} component={ProfileAdmin}  authenticated={isAuthenticated}/>
+          <AuthRoute path="/MenuHistory" redirectTo="/LoginAdmin"  exact={true} component={MenuHistory}  authenticated={isAuthenticated}/>
+          <AuthRoute path="/MenuData" redirectTo="/LoginAdmin"  exact={true} component={MenuData}  authenticated={isAuthenticated}/>
+          <AuthRoute path="/HistoryAdminSiswa" redirectTo="/LoginAdmin"  exact={true} component={HistoryAdminSiswa}  authenticated={isAuthenticated}/>
+          <AuthRoute path="/CreateUser" redirectTo="/LoginAdmin"  exact={true} component={CreateUser}  authenticated={isAuthenticated}/>
+          <AuthRoute path="/createSiswa" redirectTo="/LoginAdmin"  exact={true} component={createSiswa}  authenticated={isAuthenticated}/>
+          <AuthRoute path="/createDosen" redirectTo="/LoginAdmin"  exact={true} component={createDosen}  authenticated={isAuthenticated}/>
+          <AuthRoute path="/dataDosen" redirectTo="/LoginAdmin"  exact={true} component={dataDosen}  authenticated={isAuthenticated}/>
+          <AuthRoute path="/dataSiswa" redirectTo="/LoginAdmin"  exact={true} component={dataSiswa}  authenticated={isAuthenticated}/>
 
       	</React.Fragment>
       </BrowserRouter>

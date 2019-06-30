@@ -75,17 +75,16 @@ router.post('/data/datalog', async ( req, res ) => { //menyimpan data
 	}
 })
 
-router.get('/data/histori/lab', async (req, res) => { //mengambil data
+router.get('/data/data-log/lab', async (req, res) => { //untuk query arduino
 	const dataLab = await Log_data.find().sort({'_id':-1}).limit(1)
 
 	if (dataLab) {
 		res.json({
-			data:dataLab
+			dataLab
 		})
+
 	} else {
-		res.json({
-			data:"Gagal"
-		})
+		console.log('gagal')
 	}
 })
 
