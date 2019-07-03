@@ -172,7 +172,7 @@ class openLab extends React.Component {
                 </IconButton>
             </Typography>
             <Typography variant="h6" align="right" color="inherit" className={classes.Grow}>
-              Buka Pintu
+              Pinjam LAB
             </Typography>
           </Toolbar>
         </AppBar>
