@@ -39,7 +39,7 @@ class HistoryDosen extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`localhost:4000/api/data/histori/dosen`)
+    axios.get(`http://localhost:4000/api/data/histori/dosen`)
       .then(res => {
         console.log(res.data)
         this.setState(state => ({data: res.data }) )

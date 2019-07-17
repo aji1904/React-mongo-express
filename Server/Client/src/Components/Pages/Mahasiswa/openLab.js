@@ -88,7 +88,7 @@ class openLab extends React.Component {
     this.getDate()
     const storage = LocalStorage()
     const token = storage.get('logintoken')
-    axios.get(`localhost:4000/api/data/user/${token}`)
+    axios.get(`http://localhost:4000/api/data/user/${token}`)
       .then(res => {
         console.log(res.data)
         this.setState(state => ({ data: res.data}))
@@ -97,7 +97,7 @@ class openLab extends React.Component {
         console.log(err)
       })
 
-    axios.get(`localhost:4000/api/data/emailDosen`)
+    axios.get(`http://localhost:4000/api/data/emailDosen`)
       .then(res => {
         console.log(res.data)
         this.setState(state => ({dataDosen: res.data }) )
@@ -164,7 +164,7 @@ class openLab extends React.Component {
     })
 
     console.log(sendEmail)
-    axios.post('localhost:4000/api/lab', labSiswa)
+    axios.post('http://localhost:4000/api/lab', labSiswa)
       .then( ({response})=>{
         this.setState(state => ({pesan: response.data}) )
       })
@@ -172,7 +172,7 @@ class openLab extends React.Component {
         this.setState(state => ({pesan: response.data}) )
       })
 
-    axios.post('localhost:4000/api/emailsiswa', sendEmail)
+    axios.post('http://localhost:4000/api/emailsiswa', sendEmail)
       .then( res => {
         console.log('berhasil')
       })

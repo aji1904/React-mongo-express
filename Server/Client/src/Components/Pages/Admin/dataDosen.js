@@ -47,7 +47,7 @@ class dataDosen extends React.Component {
     open: false,
   }
   componentDidMount() {
-    axios.get(`localhost:4000/api/data/dataDosen`)
+    axios.get(`http://localhost:4000/api/data/dataDosen`)
       .then(res => {
         console.log(res.data)
         this.setState(state => ({data: res.data }) )
@@ -72,7 +72,7 @@ class dataDosen extends React.Component {
   handleClickOut = event => {
     event.preventDefault();
 
-    axios.get(`localhost:4000/api/data/deleteDosen`)
+    axios.get(`http://localhost:4000/api/data/deleteDosen`)
       .then(res => {
         console.log(res.data)
         this.setState(state => ({data: res.data }) )

@@ -83,7 +83,7 @@ class openDoor extends React.Component {
     this.getDate()
     const storage = LocalStorage()
     const token = storage.get('logintoken')
-    axios.get(`localhost:4000/api/data/user/${token}`)
+    axios.get(`http://localhost:4000/api/data/user/${token}`)
       .then(res => {
         console.log(res.data)
         this.setState(state => ({ data: res.data}))
@@ -92,7 +92,7 @@ class openDoor extends React.Component {
         console.log(err)
       })
 
-    axios.get(`localhost:4000/api/data/emailSiswa`)
+    axios.get(`http://localhost:4000/api/data/emailSiswa`)
       .then(res => {
         console.log(res.data)
         this.setState(state => ({dataSiswa: res.data }) )
@@ -157,7 +157,7 @@ class openDoor extends React.Component {
       open: true,
     })
 
-    axios.post('localhost:4000/api/historydosen', historydosen)
+    axios.post('http://localhost:4000/api/historydosen', historydosen)
       .then( ({response}) => {
         this.setState(state => ({pesan: response.data}) )
       })
@@ -165,7 +165,7 @@ class openDoor extends React.Component {
         this.setState(state => ({pesan: response.data}) )
       })
 
-    axios.post('localhost:4000/api/data/datalog', data_log)
+    axios.post('http://localhost:4000/api/data/datalog', data_log)
       .then( res => {
         console.log('berhasil')
       })
@@ -173,7 +173,7 @@ class openDoor extends React.Component {
         console.log(data_log)
       })
 
-    axios.post('localhost:4000/api/emaildosen', sendEmail)
+    axios.post('http://localhost:4000/api/emaildosen', sendEmail)
       .then( res => {
         console.log('berhasil')
       })

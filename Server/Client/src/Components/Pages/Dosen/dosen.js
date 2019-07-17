@@ -118,7 +118,7 @@ class LoginDosen extends React.Component {
     })
 
     const data = this.props;
-    axios.post('localhost:4000/api/auth', auth)
+    axios.post('http://localhost:4000/api/auth', auth)
       .then(res => {
         this.setState(state => ({pesan : res.data.pesan}) )
         storage.set('logintoken', res.data.token)

@@ -39,7 +39,7 @@ class HistorySiswa extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`localhost:4000/api/data/histori/mahasiswa`)
+    axios.get(`http://localhost:4000/api/data/histori/mahasiswa`)
       .then(res => {
         console.log(res.data)
         this.setState(state => ({data: res.data }) )

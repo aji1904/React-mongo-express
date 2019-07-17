@@ -45,7 +45,7 @@ class Profile extends React.Component {
   componentDidMount() {
     const storage = LocalStorage()
     const token = storage.get('logintoken')
-    axios.get(`localhost:4000/api/data/user/${token}`)
+    axios.get(`http://localhost:4000/api/data/user/${token}`)
       .then(res => {
         console.log(res.data)
         this.setState(state => ({ data: res.data, pesan: res.pesan, }))

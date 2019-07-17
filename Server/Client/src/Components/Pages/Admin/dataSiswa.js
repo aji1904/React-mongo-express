@@ -51,7 +51,7 @@ class dataSiswa extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`localhost:4000/api/data/dataSiswa`)
+    axios.get(`http://localhost:4000/api/data/dataSiswa`)
       .then(res => {
         console.log(res.data)
         this.setState({data: res.data })
@@ -82,7 +82,7 @@ class dataSiswa extends React.Component {
       nim: this.state.nim
     }
 
-    axios.post(`localhost:4000/api/data/deleteSiswa`, deleteUser)
+    axios.post(`http://localhost:4000/api/data/deleteSiswa`, deleteUser)
       .then(res => {
         console.log(res.data)
         this.setState({pesan: res.data })

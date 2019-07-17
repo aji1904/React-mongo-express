@@ -110,7 +110,7 @@ class createUser extends React.Component {
       open: true,
     })
 
-    axios.post('localhost:4000/api/mahasiswa', createUser)
+    axios.post('http://localhost:4000/api/mahasiswa', createUser)
       .then( ({response}) => {
         this.setState(state => ({ pesan: response.data }) )
       })
