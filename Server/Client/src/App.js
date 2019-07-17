@@ -24,6 +24,7 @@ import {BrowserRouter, Route,} from 'react-router-dom';
 import dataDosen from './Components/Pages/Admin/dataDosen';
 import {AuthRoute} from 'react-router-auth';
 import dataSiswa from './Components/Pages/Admin/dataSiswa';
+import HttpsRedirect from 'react-https-redirect';
 
 class App extends React.Component {
 
@@ -33,6 +34,7 @@ class App extends React.Component {
       localStorage.getItem("logintoken") !== null && typeof localStorage.getItem("logintoken") !== "undefined" 
    
     return (
+      <HttpsRedirect>
       <BrowserRouter>	
     		<React.Fragment>
 
@@ -66,6 +68,7 @@ class App extends React.Component {
 
       	</React.Fragment>
       </BrowserRouter>
+      </HttpsRedirect>
     );
   }
 }

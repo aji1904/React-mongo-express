@@ -36,7 +36,7 @@ const styles = theme => ({
   Content: {
     marginTop: 85,
     [theme.breakpoints.down('xs')]: {
-      marginTop: 15,
+      marginTop: 85,
       marginBottom: 50,
       paddingBottom: 10,
     },
@@ -79,18 +79,30 @@ class openLab extends React.Component {
     data: {},
     pesan: '',
     open: false,
+    dataDosen: [],
+    email:'',
+
   } 
 
   componentDidMount() {
     this.getDate()
     const storage = LocalStorage()
     const token = storage.get('logintoken')
-    axios.get(`http://localhost:4000/api/data/user/${token}`)
+    axios.get(`localhost:4000/api/data/user/${token}`)
       .then(res => {
         console.log(res.data)
         this.setState(state => ({ data: res.data}))
       })
       .catch(err => {
+        console.log(err)
+      })
+
+    axios.get(`localhost:4000/api/data/emailDosen`)
+      .then(res => {
+        console.log(res.data)
+        this.setState(state => ({dataDosen: res.data }) )
+      })
+      .catch( err => {
         console.log(err)
       })
     }
@@ -125,10 +137,16 @@ class openLab extends React.Component {
       waktuMulai: this.state.waktuMulai,
       waktuSelesai: this.state.waktuSelesai,
       tanggal : this.state.tanggal,
-      namaDosen : this.state.namaDosen,
+      namaDosen : this.state.dataDosen.nama,
       pelajaran : this.state.pelajaran,
       ruangan : this.state.ruangan,
       lamaPinjam : this.state.lamaPinjam,
+    }
+
+    const sendEmail = {
+      email: this.state.pilihEmail,
+      nama: this.state.data.nama,
+      kelas: this.state.data.kelas,
     }
 
 
@@ -145,12 +163,21 @@ class openLab extends React.Component {
       open: true,
     })
 
-    axios.post('http://localhost:4000/api/lab', labSiswa)
+    console.log(sendEmail)
+    axios.post('localhost:4000/api/lab', labSiswa)
       .then( ({response})=>{
         this.setState(state => ({pesan: response.data}) )
       })
       .catch( ({response})=>{
         this.setState(state => ({pesan: response.data}) )
+      })
+
+    axios.post('localhost:4000/api/emailsiswa', sendEmail)
+      .then( res => {
+        console.log('berhasil')
+      })
+      .catch( res => {
+        console.log(sendEmail)
       })
 
   }
@@ -230,26 +257,18 @@ class openLab extends React.Component {
             </select>
           </Center>
         </div>
-        <div>
-          <Center>
-            <TextValidator
-              label="Nama Dosen"
-              className={classes.textField}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              margin="dense"
-              variant="outlined"
-              style={{width : 400}}
-              type="text"
-              name="namaDosen"
-              value={this.state.namaDosen}
-              onChange={this.handleChange}
-              validators = {['required', 'minStringLength: 6']}
-              errorMessages = {['this field is null', 'Minimal 6 Karakter.']}
-            />
-          </Center>
-        </div>
+          <div>
+            <Center>            
+              <select className={classes.select} name="pilihEmail" value={this.state.pilihEmail} onChange={this.handleChange} required>
+                <option value="">Pilih Dosen</option>
+                {this.state.dataDosen.map( (item, key) =>
+                <React.Fragment>
+                    <option key={key} value={item.email}>{item.nama}</option>
+                </React.Fragment>
+              )}             
+              </select>
+            </Center>
+          </div>
         <div>
           <Center>
             <TextValidator

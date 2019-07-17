@@ -120,18 +120,18 @@ class LoginSiswa extends React.Component {
       password: '',
     })
 
-    axios.post('http://localhost:4000/api/auth', auth)
+    const data = this.props;
+    axios.post('localhost:4000/api/auth', auth)
       .then(res => {
         this.setState(state => ({pesan: res.data.pesan}) )
         storage.set('logintoken', res.data.token)
       })
-      .then(res => new Promise(resolve => {
-          setTimeout( () => {
-            resolve(this.props.history.push('/MenuMahasiswa'))
+      .then(res =>  {
+        // 
+        setTimeout( () => {
+            window.location.href = '/MenuMahasiswa'
           }, 500)
-        })
-      )
-
+      })
       .catch( ({ response }) => {
         this.setState(state => ({ pesan: response.data }) )
       })
@@ -239,7 +239,6 @@ class LoginSiswa extends React.Component {
           }}
           open={this.state.open}
           onClose={this.handleClose}
-          autoHideDuration={5000}
           ContentProps={{
             'aria-describedby': 'message-id',
           }}

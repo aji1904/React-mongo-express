@@ -7,14 +7,15 @@ const historydosen = require('../models/history-dosen')
 const Log_data = require('../models/data')
 const router = Router()
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
+const nodemailer = require ('nodemailer')
 
 router.get('/admin',  async (req, res) => {
 
-	const password = await bcrypt.hash( 'admin123', 10 )
+	const password = await bcrypt.hash( 'admin12345', 10 )
 
 	const newAdmin = new Admin({
-		username: 'admin123',
+		username: 'admin12345',
 		password: password,
 		status: 'admin',
 		email: 'admin12345@gmail.com',
@@ -49,7 +50,7 @@ router.get('/data/histori/mahasiswa', async (req, res) => {
 		res.status(200).send(data)
 		return
 	} else {
-		res.status(200).send('Data Belum Tersedia')
+		res.status(404).send('Data Belum Tersedia')
 	}
 })
 
@@ -60,7 +61,7 @@ router.get('/data/histori/dosen', async (req, res) => {
 		console.log('data ditemukan')
 		res.status(200).send(data)
 	} else {
-		res.status(200).send('Data Belum Tersedia')
+		res.status(404).send('Data Belum Tersedia')
 	}
 })
 
@@ -92,7 +93,7 @@ router.post('/mahasiswa', async (req, res) => {
 	const check = await Student.findOne({ nim: req.body.nim })
 
 	if (check) {
-		res.status(401).send('Data Mahasiswa Telah Tersedia')
+		res.status(200).send('Data Mahasiswa Telah Tersedia')
 		console.log('Gagal')
 		return
 	}else{
@@ -100,7 +101,7 @@ router.post('/mahasiswa', async (req, res) => {
 		const newStudent = new Student(req.body)
 		try {
 			await newStudent.save()
-			res.status(401).send('Data Mahasiswa Telah Ditambahkan')
+			res.status(200).send('Data Mahasiswa Telah Ditambahkan')
 			console.log('save berhasil')
 		} catch (err) {
 			console.log('save siswa gagal', err)
@@ -112,7 +113,7 @@ router.post('/dosen', async ( req, res ) => {
 	const check = await Lecture.findOne({ nip: req.body.nip })
 
 	if (check) {
-		res.status(401).send('Data Dosen Telah Tersedia !')
+		res.status(200).send('Data Dosen Telah Tersedia !')
 		console.log('Gagal')
 		return
 	} else {
@@ -121,7 +122,7 @@ router.post('/dosen', async ( req, res ) => {
 		const newLecture = new Lecture(req.body)
 		try {
 			await newLecture.save()
-			res.status(401).send('Data Dosen Telah Ditambahkan')
+			res.status(200).send('Data Dosen Telah Ditambahkan')
 			console.log('save dosen berhasil')
 		} catch (error) {
 			console.log('save dosen gagal', err)
@@ -133,10 +134,10 @@ router.post('/historydosen', async ( req, res ) => {
 	const newhistorydosen = new historydosen(req.body)
 	try {
 		await newhistorydosen.save()
-		res.status(401).send('Pintu LAB Telah Terbuka')
+		res.status(200).send('Pintu LAB Telah Terbuka')
 		console.log('save historydosen berhasil')
 	} catch (error) {
-		res.status(401).send('Peminjaman LAB Selesai. Silahkan Tunggu')
+		res.status(401).send('error')
 		console.log('save history dosen gagal', err)
 	}
 })
@@ -146,7 +147,7 @@ router.post('/lab', async ( req, res ) => {
 	const newLab = new Lab(req.body)
 	try {
 		await newLab.save()
-		res.status(401).send('Peminjaman LAB Selesai. Silahkan Tunggu')
+		res.status(200).send('Peminjaman LAB Selesai. Tunggu !!!')
 		console.log('save lab berhasil')
 	} catch (error) {
 		res.status(401).send('Peminjaman LAB Gagal.')
@@ -187,9 +188,139 @@ router.post('/auth',  async (req, res) => {
 	} else {
 		res.status(401).send('Username Salah atau Tidak Terdaftar!')
 	}
-
 	res.end()
+})
 
+router.post('/emailsiswa', async(req, res) => {
+	const transporter = nodemailer.createTransport({
+		service: 'gmail',
+		auth: {
+		    user: 'mahasiswatekkom@gmail.com',
+		    pass: 'AP12345!@#'
+		}
+	})
+	const mailOptions = {
+	  from: 'mahasiswatekkom@gmail.com', // sender address
+	  to: req.body.email, // list of receivers
+	  subject: 'Izin Akses Buka Pintu LAB 3', // Subject line
+	  html: '<p>Assalamualaikum, Bapak/Ibu Dosen Pengajar. Saya '+req.body.nama +'('+req.body.kelas+') Ingin Meminta Izin Akses untuk Buka Ruang LAB 3</p>'// plain text body
+	}
+	transporter.sendMail(mailOptions, function (err, info) {
+	   if(err)
+	     console.log(err)
+	   else
+	     console.log('sukses')
+	})
+  	res.end('selesai')
+})
+
+router.post('/emaildosen', async(req, res) => {
+	const transporter = nodemailer.createTransport({
+		service: 'gmail',
+		auth: {
+		    user: 'dosentekkom@gmail.com',
+		    pass: 'AP12345!@#'
+		}
+	})
+
+	const mailOptions = {
+	  from: 'dosentekkom@gmail.com', // sender address
+	  to: req.body.email, // list of receivers
+	  subject: 'Status Pintu ('+req.body.namaDosen+')' , // Subject line
+	  html: '<p>Pintu LAB 3 Sudah terbuka, Silahkan Masuk</p>'// plain text body
+	}
+
+	transporter.sendMail(mailOptions, function (err, info) {
+	   if(err)
+	     console.log(err)
+	   else
+	     console.log('sukses')
+	})
+  	
+  	res.end('selesai')
+})
+
+router.get('/data/emailSiswa', async (req, res) => {
+	const data = await Student.find().sort({'_id':-1})
+
+	if (data) {
+		console.log('data ditemukan')
+		res.status(200).send(data)
+		return
+	} else {
+		res.status(404).send('Data Belum Tersedia')
+	}
+
+	res.end(data);
+})
+
+router.get('/data/emailDosen', async (req, res) => {
+	const data = await Lecture.find().sort({'_id':-1})
+
+	if (data) {
+		console.log('data ditemukan')
+		res.status(200).send(data)
+		return
+	} else {
+		res.status(404).send('Data Belum Tersedia')
+	}
+
+	res.end(data);
+})
+
+
+router.get('/data/dataSiswa', async (req, res) => {
+	const data = await Student.find()
+
+	if (data) {
+		console.log('data ditemukan')
+		res.status(200).send(data)
+		return
+	} else {
+		res.status(404).send('Data Belum Tersedia')
+	}
+
+	res.end(data);
+})
+
+router.get('/data/dataDosen', async (req, res) => {
+	const data = await Lecture.find()
+
+	if (data) {
+		console.log('data ditemukan')
+		res.status(200).send(data)
+		return
+	} else {
+		res.status(404).send('Data Belum Tersedia')
+	}
+
+	res.end(data);
+})
+
+router.post('/data/deleteDosen', async (req, res) => {
+	const data = await Lecture.deleteOne({nip : req.body.nip})
+
+	if (data) {
+		console.log('data terhapus')
+		res.status(200).send('Data Dosen Telah Dihapus')
+	} else {
+		res.status(500).send('gagal')
+	}
+
+	res.end(data);
+})
+
+router.post('/data/deleteSiswa', async (req, res) => {
+	const data = await Student.deleteOne({nim : req.body.nim})
+
+	if (data) {
+		console.log('data terhapus')
+		res.status(200).send('Data Mahasiswa Telah Dihapus')
+	} else {
+		res.status(500).send('gagal')
+	}
+
+	res.end(data);
 })
 
 

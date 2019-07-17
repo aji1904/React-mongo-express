@@ -24,8 +24,10 @@ app.get('*', (req, res) => {
 mongoose.connect('mongodb+srv://aji199804:@aji12345@cluster0-t4639.mongodb.net/tekkom?retryWrites=true', { useNewUrlParser: true })
 	.then(() => {
 		console.log('MongoDB Connected')
-		app.listen(4000, () => console.log(`Running with port 4000`))
+		app.listen(process.env.PORT ? process.env.PORT : 4000, () => console.log(`Running with port ${process.env.PORT ? process.env.PORT : 4000}`))
 	})
 	.catch(err => {
 		console.log('Error on connecting mongodb:', err)
 	})
+
+

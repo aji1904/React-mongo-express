@@ -72,18 +72,32 @@ class openDoor extends React.Component {
     data: {},
     pesan: '',
     open: false,
+    dataSiswa: [],
+    namaSiswa: '',
+    emailSiswa: '',
+    pilihEmail: '',
+    namaDosen: '',
   } 
 
   componentDidMount() {
     this.getDate()
     const storage = LocalStorage()
     const token = storage.get('logintoken')
-    axios.get(`http://localhost:4000/api/data/user/${token}`)
+    axios.get(`localhost:4000/api/data/user/${token}`)
       .then(res => {
         console.log(res.data)
         this.setState(state => ({ data: res.data}))
       })
       .catch(err => {
+        console.log(err)
+      })
+
+    axios.get(`localhost:4000/api/data/emailSiswa`)
+      .then(res => {
+        console.log(res.data)
+        this.setState(state => ({dataSiswa: res.data }) )
+      })
+      .catch( err => {
         console.log(err)
       })
   }
@@ -128,6 +142,11 @@ class openDoor extends React.Component {
       ruangan: this.state.ruangan,
     }
 
+    const sendEmail = {
+      email: this.state.pilihEmail,
+      namaDosen: this.state.data.nama,
+    }
+
     this.setState({
       nip: this.state.data.nip, 
       dosen: this.state.data.nama,
@@ -138,7 +157,7 @@ class openDoor extends React.Component {
       open: true,
     })
 
-    axios.post('http://localhost:4000/api/historydosen', historydosen)
+    axios.post('localhost:4000/api/historydosen', historydosen)
       .then( ({response}) => {
         this.setState(state => ({pesan: response.data}) )
       })
@@ -146,12 +165,20 @@ class openDoor extends React.Component {
         this.setState(state => ({pesan: response.data}) )
       })
 
-    axios.post('http://localhost:4000/api/data/datalog', data_log)
+    axios.post('localhost:4000/api/data/datalog', data_log)
       .then( res => {
         console.log('berhasil')
       })
       .catch( res => {
-        console.log('gagal')
+        console.log(data_log)
+      })
+
+    axios.post('localhost:4000/api/emaildosen', sendEmail)
+      .then( res => {
+        console.log('berhasil')
+      })
+      .catch( res => {
+        console.log(sendEmail)
       })
   }
 
@@ -213,6 +240,7 @@ class openDoor extends React.Component {
             />
           </Center>
         </div>
+
         <div>
           <Center>            
             <select className={classes.select} name="lamaBuka" value={this.state.lamaBuka} onChange={this.handleChange} required>
@@ -223,6 +251,20 @@ class openDoor extends React.Component {
             </select>
           </Center>
         </div>
+
+        
+            <div>
+              <Center>            
+                <select className={classes.select} name="pilihEmail" value={this.state.pilihEmail} onChange={this.handleChange} required>
+                  <option value="">Pilih Siswa</option>
+                  {this.state.dataSiswa.map( (item, key) =>
+                  <React.Fragment>
+                      <option key={key} value={item.email}>{item.nama} ({item.kelas})</option>
+                  </React.Fragment>
+                )}             
+                </select>
+              </Center>
+            </div>
 
          <div>
             <Center>

@@ -17,6 +17,12 @@ import Avatar from '@material-ui/core/Avatar';
 import PeopleIcon from '@material-ui/icons/Person';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Paper from '@material-ui/core/Paper';
+import axios from 'axios'
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 
 const styles = {
   root: {
@@ -36,6 +42,61 @@ const styles = {
 };
 
 class dataSiswa extends React.Component {
+
+  state = {
+    data: [],
+    open: false,
+    pesan: '',
+    nim: '',
+  }
+
+  componentDidMount() {
+    axios.get(`localhost:4000/api/data/dataSiswa`)
+      .then(res => {
+        console.log(res.data)
+        this.setState({data: res.data })
+      })
+      .catch( err => {
+        console.log(err)
+      })
+  }
+
+  handleClickOpen = (nim) => {
+    this.setState({
+      open: true,
+      nim: nim
+    })
+  }
+
+  handleClose = event => {
+    this.setState({
+      open: false,
+      nim:''
+    })
+  }
+
+  handleClickOut = event => {
+    event.preventDefault();
+
+    const deleteUser = {
+      nim: this.state.nim
+    }
+
+    axios.post(`localhost:4000/api/data/deleteSiswa`, deleteUser)
+      .then(res => {
+        console.log(res.data)
+        this.setState({pesan: res.data })
+      })
+      .catch( err => {
+        console.log(err)
+      })
+
+    this.setState({
+      open: false,
+      nim:''
+    })
+  }
+
 
   render() {
   const { classes, dense, secondary } = this.props;
@@ -64,47 +125,55 @@ class dataSiswa extends React.Component {
           <Center> 
             <Paper className={classes.paper}>
               <div className={classes.demo}>
-                <List dense={dense}>
-                    <ListItem>
-                      <ListItemAvatar>
-                        <Avatar>
-                          <PeopleIcon />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary="Siswa A"
-                        secondary={secondary ? 'Secondary text' : 'nim siswa'}
-                      />
-                      <ListItemSecondaryAction>
-                        <IconButton edge="end" aria-label="Delete">
-                          <DeleteIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                </List>
-                <List dense={dense}>
-                    <ListItem>
-                      <ListItemAvatar>
-                        <Avatar>
-                          <PeopleIcon />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary="Siswa B"
-                        secondary={secondary ? 'Secondary text' : 'nim siswa'}
-                      />
-                      <ListItemSecondaryAction>
-                        <IconButton edge="end" aria-label="Delete">
-                          <DeleteIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                </List>
+                  {this.state.data.map( (item, key) =>
+                  <React.Fragment>
+                    <List dense={dense}>
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar>
+                              <PeopleIcon />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            key={key}
+                            primary= {item.nama}
+                            secondary={secondary ? 'Secondary text' : item.nim}
+                          />
+                          <ListItemSecondaryAction>
+                            <IconButton onClick={(event)=> this.handleClickOpen(item.nim , event)}>
+                              <DeleteIcon />
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                    </List>
+                  </React.Fragment>
+                )}
+
               </div>
               </Paper>
           </Center>
         </div>
-
+        { /* dialog button */}
+        <Dialog
+          open={this.state.open}
+          onClose={this.handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description" align="center">
+              Apakah anda ingin menghapus user ini ?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+              Tidak
+            </Button>
+            <Button onClick={this.handleClickOut} color="primary" autoFocus>
+              Iya
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }

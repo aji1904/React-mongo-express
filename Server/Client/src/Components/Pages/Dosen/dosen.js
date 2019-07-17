@@ -117,18 +117,18 @@ class LoginDosen extends React.Component {
       open: true,
     })
 
-    axios.post('http://localhost:4000/api/auth', auth)
+    const data = this.props;
+    axios.post('localhost:4000/api/auth', auth)
       .then(res => {
         this.setState(state => ({pesan : res.data.pesan}) )
         storage.set('logintoken', res.data.token)
       }) 
-      .then(res => new Promise (resolve => {
+      .then(res =>  {
+        // 
         setTimeout( () => {
-          resolve(this.props.history.push('/MenuDosen'))
-        }, 500 )
+            window.location.href = '/MenuDosen'
+          }, 500)
       })
-
-      )
       .catch( ({response}) => {
         this.setState(state => ({pesan: response.data}) )
       }
@@ -235,7 +235,6 @@ class LoginDosen extends React.Component {
             horizontal: 'center',
           }}
           open={this.state.open}
-          autoHideDuration={5000}
           onClose={this.handleClose}
           ContentProps={{
             'aria-describedby': 'message-id',

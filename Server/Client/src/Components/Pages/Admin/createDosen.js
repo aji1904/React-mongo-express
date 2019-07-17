@@ -99,7 +99,7 @@ class createDosen extends React.Component {
       open: true,
     })
 
-    axios.post('http://localhost:4000/api/dosen', createDosen)
+    axios.post('localhost:4000/api/dosen', createDosen)
       .then( ({response})=>{
         this.setState(state => ({pesan: response.data}) )
       })

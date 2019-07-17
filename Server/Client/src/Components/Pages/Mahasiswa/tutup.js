@@ -75,7 +75,7 @@ class openDoor extends React.Component {
     this.getDate()
     const storage = LocalStorage()
     const token = storage.get('logintoken')
-    axios.get(`http://localhost:4000/api/data/user/${token}`)
+    axios.get(`localhost:4000/api/data/user/${token}`)
       .then(res => {
         console.log(res.data)
         this.setState(state => ({ data: res.data}))
@@ -125,7 +125,7 @@ class openDoor extends React.Component {
       open: true,
     })
 
-    axios.post('http://localhost:4000/api/data/datalog', data_log)
+    axios.post('localhost:4000/api/data/datalog', data_log)
       .then( res => {
         console.log('berhasil')
       })

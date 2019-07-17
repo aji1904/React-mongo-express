@@ -19,7 +19,7 @@ import axios from 'axios';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import LocalStorage from 'simple-webstorage/lib/local';
 import Snackbar from '@material-ui/core/Snackbar';
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@material-ui/icons/Close'; 
  
 const styles = theme => ({
   root: {
@@ -118,26 +118,26 @@ class LoginAdmin extends React.Component {
       password: '',
     })
 
-    axios.post('http://localhost:4000/api/auth', auth)
+    const data = this.props;
+    axios.post('localhost:4000/api/auth', auth)
       .then(res => {
-        this.setState(state => ({pesan: res.data.pesan}) )
+        this.setState(state => ({pesan : res.data.pesan}) )
         storage.set('logintoken', res.data.token)
-      })
-      .then(res => new Promise(resolve => {
-          setTimeout( () => {
-            resolve(this.props.history.push('/MenuAdmin'))
+      }) 
+      .then(res =>  {
+        // 
+        setTimeout( () => {
+            window.location.href = '/MenuAdmin'
           }, 500)
-        })
-      )
-
-      .catch( ({ response }) => {
-        this.setState(state => ({ pesan: response.data }) )
       })
+      .catch( ({response}) => {
+        this.setState(state => ({pesan: response.data}) )
+      }
+    )
   }
 
   render() {
     const { classes } = this.props;
-
     return (
       <div className={classes.root}>
         <AppBar position="static">
@@ -235,7 +235,6 @@ class LoginAdmin extends React.Component {
           }}
           open={this.state.open}
           onClose={this.handleClose}
-          autoHideDuration={5000}
           ContentProps={{
             'aria-describedby': 'message-id',
           }}
