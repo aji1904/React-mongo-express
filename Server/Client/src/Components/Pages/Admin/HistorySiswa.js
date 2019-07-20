@@ -81,7 +81,7 @@ class HistorySiswa extends React.Component {
                     <TableCell>NIM_SISWA</TableCell>
                     <TableCell>NAMA_SISWA</TableCell>
                     <TableCell>KELAS</TableCell>
-                    <TableCell>NAMA_DOSEN</TableCell>
+                    <TableCell>EMAIL_DOSEN</TableCell>
                     <TableCell>WAKTU_AWAL</TableCell>
                     <TableCell>WAKTU_SELESAI</TableCell>
                     <TableCell>TANGGAL_PINJAM</TableCell>

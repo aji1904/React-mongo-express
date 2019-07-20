@@ -251,6 +251,36 @@ router.post('/emaildosen', async(req, res) => {
 })
 
 //mengambil data dari siswa
+router.get('/data/emailSiswa', async (req, res) => {
+	const data = await Student.find().sort({'_id':-1})
+
+	if (data) {
+		console.log('data ditemukan')
+		res.status(200).send(data)
+		return
+	} else {
+		res.status(404).send('Data Belum Tersedia')
+	}
+
+	res.end(data);
+})
+
+//mengambil data dari dosen
+router.get('/data/emailDosen', async (req, res) => {
+	const data = await Lecture.find().sort({'_id':-1})
+
+	if (data) {
+		console.log('data ditemukan')
+		res.status(200).send(data)
+		return
+	} else {
+		res.status(404).send('Data Belum Tersedia')
+	}
+
+	res.end(data);
+})
+
+
 router.get('/data/dataSiswa', async (req, res) => {
 	const data = await Student.find()
 
@@ -265,9 +295,9 @@ router.get('/data/dataSiswa', async (req, res) => {
 	res.end(data);
 })
 
-//mengambil data dari dosen
 router.get('/data/dataDosen', async (req, res) => {
 	const data = await Lecture.find()
+
 	if (data) {
 		console.log('data ditemukan')
 		res.status(200).send(data)
@@ -279,7 +309,6 @@ router.get('/data/dataDosen', async (req, res) => {
 	res.end(data);
 })
 
-//menghapus user dosen
 router.post('/data/deleteDosen', async (req, res) => {
 	const data = await Lecture.deleteOne({nip : req.body.nip})
 
@@ -293,7 +322,6 @@ router.post('/data/deleteDosen', async (req, res) => {
 	res.end(data);
 })
 
-//menghapus user siswa
 router.post('/data/deleteSiswa', async (req, res) => {
 	const data = await Student.deleteOne({nim : req.body.nim})
 

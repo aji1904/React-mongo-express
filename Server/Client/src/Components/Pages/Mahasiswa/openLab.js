@@ -328,7 +328,6 @@ class openLab extends React.Component {
             horizontal: 'center',
           }}
           open={this.state.open}
-          autoHideDuration={5000}
           onClose={this.handleClose}
           ContentProps={{
             'aria-describedby': 'message-id',
