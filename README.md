@@ -5,7 +5,8 @@ install on folder Server
 - install express
 - install bcrypt
 - install mongoose
-- install axios
+- install cors
+- install router
 
 install on folder Client
 - install react-center
