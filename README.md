@@ -1,17 +1,22 @@
 # React-mongo-express
 
-- install material-ui
-- install axios
+install on folder Server
 - install jsonwebtoken
-- install react-center
 - install express
 - install bcrypt
 - install mongoose
+- install axios
 
-run server
+install on folder Client
+- install react-center
+- install material-ui
+- install axios
+- npm i simple-webstorage --save
+
+run server on folder Server
 - cd Server
 - npm run dev
 
-run client
+run client on folder Client
 - cd Client
 - npm start
