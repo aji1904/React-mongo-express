@@ -111,8 +111,8 @@ class createUser extends React.Component {
     })
 
     axios.post('http://localhost:4000/api/mahasiswa', createUser)
-      .then( ({response}) => {
-        this.setState(state => ({ pesan: response.data }) )
+      .then( res => {
+        this.setState(state => ({ pesan: res.data }) )
       })
       .catch( ({response}) => {
         this.setState(state => ({ pesan: response.data }) )
@@ -249,7 +249,6 @@ class createUser extends React.Component {
             horizontal: 'center',
           }}
           open={this.state.open}
-          autoHideDuration={5000}
           onClose={this.handleClose}
           ContentProps={{
             'aria-describedby': 'message-id',

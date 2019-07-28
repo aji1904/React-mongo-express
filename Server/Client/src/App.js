@@ -20,6 +20,7 @@ import MenuData from './Components/Pages/Admin/menuData';
 import openDoor from './Components/Pages/Dosen/openDoor';
 import openLab from './Components/Pages/Mahasiswa/openLab';
 import closeLab from './Components/Pages/Mahasiswa/tutup';
+import closeLabDosen from './Components/Pages/Dosen/tutup';
 import {BrowserRouter, Route,} from 'react-router-dom';
 import dataDosen from './Components/Pages/Admin/dataDosen';
 import {AuthRoute} from 'react-router-auth';
@@ -34,7 +35,7 @@ class App extends React.Component {
       localStorage.getItem("logintoken") !== null && typeof localStorage.getItem("logintoken") !== "undefined" 
    
     return (
-      <HttpsRedirect>
+//      <HttpsRedirect>
       <BrowserRouter>	
     		<React.Fragment>
 
@@ -49,6 +50,7 @@ class App extends React.Component {
           <AuthRoute path="/ProfileDosen" redirectTo="/LoginDosen" exact={true} component={ProfileDosen} authenticated={isAuthenticated}/>
           <AuthRoute path="/HistoryDosen" redirectTo="/LoginDosen" exact={true} component={HistoryDosen} authenticated={isAuthenticated}/>
           <AuthRoute path="/openLab" redirectTo="/LoginDosen" exact={true} component={openLab} authenticated={isAuthenticated}/>
+          <AuthRoute path="/closeLabDosen" redirectTo="/LoginDosen" exact={true} component={closeLabDosen} authenticated={isAuthenticated}/>
 
           <AuthRoute path="/MenuMahasiswa" redirectTo="/LoginMahasiswa"  exact={true} component={MenuMahasiswa} authenticated={isAuthenticated}/>
           <AuthRoute path="/ProfileSiswa" redirectTo="/LoginMahasiswa" exact={true} component={ProfileSiswa} authenticated={isAuthenticated}/>
@@ -68,7 +70,7 @@ class App extends React.Component {
 
       	</React.Fragment>
       </BrowserRouter>
-      </HttpsRedirect>
+//      </HttpsRedirect>
     );
   }
 }

@@ -35,11 +35,9 @@ router.get('/data/user/:token', async (req, res) => {
 	const data = jwt.verify(req.params.token, 'rahasia');
 	if (data) {
 		res.status(200).send(data)
-		return
 	} else {
 		res.status(401).send('Anda tidak terautentikasi')
 	}
-	res.end()
 })
 
 //data history siswa
@@ -49,7 +47,6 @@ router.get('/data/histori/mahasiswa', async (req, res) => {
 	if (data) {
 		console.log('data ditemukan')
 		res.status(200).send(data)
-		return
 	} else {
 		res.status(404).send('Data Belum Tersedia')
 	}
@@ -149,16 +146,15 @@ router.post('/historydosen', async ( req, res ) => {
 	}
 })
 
-//data pemakaian lab
+//data lab
 router.post('/lab', async ( req, res ) => {
-	
 	const newLab = new Lab(req.body)
 	try {
 		await newLab.save()
-		res.status(200).send('Peminjaman LAB Selesai. Tunggu !!!')
+		res.status(200).send({pesan : 'Peminjaman LAB Selesai. Tunggu !!!'})
 		console.log('save lab berhasil')
 	} catch (error) {
-		res.status(401).send('Peminjaman LAB Gagal.')
+		res.status(401).send({pesan : 'Peminjaman LAB Gagal.'})
 		console.log('save lab gagal', err)
 	}
 })
@@ -199,7 +195,7 @@ router.post('/auth',  async (req, res) => {
 	res.end()
 })
 
-//notifikasi email siswa
+//notifikasi email siswa ke dosen
 router.post('/emailsiswa', async(req, res) => {
 	const transporter = nodemailer.createTransport({
 		service: 'gmail',
@@ -223,7 +219,31 @@ router.post('/emailsiswa', async(req, res) => {
   	res.end('selesai')
 })
 
-//notifikasi email dosen
+//notifikasi tutup pintu dari siswa ke dosen
+router.post('/tutupPintuSiswa', async(req, res) => {
+	const transporter = nodemailer.createTransport({
+		service: 'gmail',
+		auth: {
+		    user: 'mahasiswatekkom@gmail.com',
+		    pass: 'AP12345!@#'
+		}
+	})
+	const mailOptions = {
+	  from: 'mahasiswatekkom@gmail.com', // sender address
+	  to: req.body.email, // list of receivers
+	  subject: 'Pintu LAB 3 Telah Terkunci', // Subject line
+	  html: '<p>Assalamualaikum, Bapak/Ibu Dosen Pengajar. Saya '+req.body.nama +'('+req.body.kelas+') Telah Mengunci Ruang LAB 3</p>'// plain text body
+	}
+	transporter.sendMail(mailOptions, function (err, info) {
+	   if(err)
+	     console.log(err)
+	   else
+	     console.log('sukses')
+	})
+  	res.end('selesai')
+})
+
+//notifikasi email dosen ke siswa
 router.post('/emaildosen', async(req, res) => {
 	const transporter = nodemailer.createTransport({
 		service: 'gmail',
@@ -250,6 +270,33 @@ router.post('/emaildosen', async(req, res) => {
   	res.end('selesai')
 })
 
+//notifikasi tutup pintu dari dosen ke siswa
+router.post('/tutupPintuDosen', async(req, res) => {
+	const transporter = nodemailer.createTransport({
+		service: 'gmail',
+		auth: {
+		    user: 'dosentekkom@gmail.com',
+		    pass: 'AP12345!@#'
+		}
+	})
+
+	const mailOptions = {
+	  from: 'dosentekkom@gmail.com', // sender address
+	  to: req.body.email, // list of receivers
+	  subject: 'LAB 3 Telah Terkunci ('+req.body.namaDosen+')' , // Subject line
+	  html: '<p>Pintu LAB 3 Sudah Terkunci, Silahkan Keluar Dari LAB</p>'// plain text body
+	}
+
+	transporter.sendMail(mailOptions, function (err, info) {
+	   if(err)
+	     console.log(err)
+	   else
+	     console.log('sukses')
+	})
+  	
+  	res.end('selesai')
+})
+
 //mengambil data dari siswa
 router.get('/data/emailSiswa', async (req, res) => {
 	const data = await Student.find().sort({'_id':-1})
@@ -257,7 +304,6 @@ router.get('/data/emailSiswa', async (req, res) => {
 	if (data) {
 		console.log('data ditemukan')
 		res.status(200).send(data)
-		return
 	} else {
 		res.status(404).send('Data Belum Tersedia')
 	}
@@ -305,8 +351,6 @@ router.get('/data/dataDosen', async (req, res) => {
 	} else {
 		res.status(404).send('Data Belum Tersedia')
 	}
-
-	res.end(data);
 })
 
 router.post('/data/deleteDosen', async (req, res) => {
@@ -318,8 +362,6 @@ router.post('/data/deleteDosen', async (req, res) => {
 	} else {
 		res.status(500).send('gagal')
 	}
-
-	res.end(data);
 })
 
 router.post('/data/deleteSiswa', async (req, res) => {
@@ -331,8 +373,6 @@ router.post('/data/deleteSiswa', async (req, res) => {
 	} else {
 		res.status(500).send('gagal')
 	}
-
-	res.end(data);
 })
 
 

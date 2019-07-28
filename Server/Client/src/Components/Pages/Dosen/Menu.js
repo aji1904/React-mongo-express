@@ -173,6 +173,19 @@ class MenuDosen extends React.Component {
             Buka Pintu
           </Button>
         </Card>
+        <Card className={classes.Card}>
+          <img src={imgRoom} alt="Tutup pintu" className={classes.img}/>
+          <Button
+            to="/closeLabDosen"
+            component={Link}
+            variant="contained"
+            disableRipple
+            color="secondary"
+            className={classes.Button}
+          >
+            Tutup LAB
+          </Button>
+        </Card>
       </Grid>
 
       { /* dialog button */}

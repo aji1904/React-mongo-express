@@ -66,6 +66,7 @@ class dataSiswa extends React.Component {
       open: true,
       nim: nim
     })
+    console.log(nim)
   }
 
   handleClose = event => {
@@ -85,7 +86,7 @@ class dataSiswa extends React.Component {
     axios.post(`http://localhost:4000/api/data/deleteSiswa`, deleteUser)
       .then(res => {
         console.log(res.data)
-        this.setState({pesan: res.data })
+        window.location.href = '/dataSiswa'
       })
       .catch( err => {
         console.log(err)

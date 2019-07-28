@@ -33,7 +33,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   Content: {
-    marginTop: 80,
+    marginTop: 100,
     [theme.breakpoints.down('xs')]: {
       marginTop: 80,
       marginBottom: 50,
@@ -63,20 +63,15 @@ const styles = theme => ({
 
 class openDoor extends React.Component {
   state = {
-    nip: '',
-    dosen : '',
-    kelas : '',
+    nama : '',
     ruangan : '',
     tanggal : '',
-    lamaBuka: '',
     data: {},
     pesan: '',
-    open: false,
+    email: '',
+    kelas: '',
     dataSiswa: [],
-    namaSiswa: '',
-    emailSiswa: '',
-    pilihEmail: '',
-    namaDosen: '',
+    open: false,
   } 
 
   componentDidMount() {
@@ -95,7 +90,7 @@ class openDoor extends React.Component {
     axios.get(`http://localhost:4000/api/data/emailSiswa`)
       .then(res => {
         console.log(res.data)
-        this.setState(state => ({dataSiswa: res.data }) )
+        this.setState({dataSiswa: res.data })
       })
       .catch( err => {
         console.log(err)
@@ -115,6 +110,7 @@ class openDoor extends React.Component {
   }
 
   handleChange = event => {
+    console.log(event.target.value)
     const {name} = event.target
 
     this.setState({
@@ -125,19 +121,10 @@ class openDoor extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    const historydosen = {
-      nip: this.state.data.nip, 
-      dosen: this.state.data.nama,
-      kelas: this.state.kelas,
-      ruangan: this.state.ruangan,
-      tanggal: this.state.tanggal,
-      lamaBuka: this.state.lamaBuka
-    }
-
     const data_log = {
-      field: '1', 
+      field: '0', 
       nama: this.state.data.nama,
-      status_pintu: 'terbuka',
+      status_pintu: 'tertutup',
       tanggal: this.state.tanggal,
       ruangan: this.state.ruangan,
     }
@@ -145,40 +132,32 @@ class openDoor extends React.Component {
     const sendEmail = {
       email: this.state.pilihEmail,
       namaDosen: this.state.data.nama,
+      kelas: this.state.data.kelas,
     }
 
     this.setState({
-      nip: this.state.data.nip, 
-      dosen: this.state.data.nama,
+      field: '0', 
+      nama: this.state.data.nama,
       tanggal : this.state.tanggal,
-      kelas : '',
+      status_pintu : 'tertutup',
       ruangan : '',
-      lamaBuka : '',
       open: true,
     })
-
-    axios.post('http://localhost:4000/api/historydosen', historydosen)
-      .then(res => {
-        this.setState(state => ({pesan: res.data}) )
-      })
-      .catch( ({response}) => {
-        this.setState(state => ({pesan: response.data}) )
-      })
 
     axios.post('http://localhost:4000/api/data/datalog', data_log)
       .then( res => {
         console.log('berhasil')
       })
       .catch( res => {
-        console.log(data_log)
+        console.log('gagal')
       })
 
-    axios.post('http://localhost:4000/api/emaildosen', sendEmail)
+    axios.post('http://localhost:4000/api/tutupPintuDosen', sendEmail)
       .then( res => {
         console.log('berhasil')
       })
       .catch( res => {
-        console.log(sendEmail)
+        console.log('error')
       })
   }
 
@@ -199,7 +178,7 @@ class openDoor extends React.Component {
                 </IconButton>
             </Typography>
             <Typography variant="h6" align="right" color="inherit" className={classes.Grow}>
-              Buka Pintu
+              Tutup Pintu
             </Typography>
           </Toolbar>
         </AppBar>
@@ -207,21 +186,16 @@ class openDoor extends React.Component {
         { /* Content Profile */ }
         <ValidatorForm ref="form" onSubmit={this.handleSubmit} onError={errors => console.log(errors)}  >
         <div className={classes.Content}>
-        <div>
-          <Center>
-            <TextValidator
-              label="Kelas Siswa"
-              className={classes.textField}
-              margin="dense"
-              variant="outlined"
-              style={{width : 400}}
-              type="text"
-              name="kelas"
-              value={this.state.kelas}
-              onChange={this.handleChange}
-              validators = {['required', 'minStringLength: 4']}
-              errorMessages = {['this field is null', 'Minimal 4 Karakter. Contoh: 6 CB']}
-            />
+        <div style={{marginBottom: 10}}>
+          <Center>            
+            <select className={classes.select} name="pilihEmail" value={this.state.pilihEmail} onChange={this.handleChange} required>
+              <option value="">Pilih Mahasiswa</option>
+              {this.state.dataSiswa.map( (item, key) =>
+              <React.Fragment>
+                  <option key={key} value={item.email}>{item.nama}</option>
+              </React.Fragment>
+            )}             
+            </select>
           </Center>
         </div>
         <div>
@@ -240,36 +214,11 @@ class openDoor extends React.Component {
             />
           </Center>
         </div>
-
-        <div>
-          <Center>            
-            <select className={classes.select} name="lamaBuka" value={this.state.lamaBuka} onChange={this.handleChange} required>
-              <option value="">Lama Peminjaman</option>
-              <option value="1 JAM">1 JAM PELAJARAN</option>
-              <option value="2 JAM">2 JAM PELAJARAN</option>
-              <option value="3 JAM">3 JAM PELAJARAN</option>
-            </select>
-          </Center>
-        </div>
-
-        
-            <div>
-              <Center>            
-                <select className={classes.select} name="pilihEmail" value={this.state.pilihEmail} onChange={this.handleChange} required>
-                  <option value="">Pilih Siswa</option>
-                  {this.state.dataSiswa.map( (item, key) =>
-                  <React.Fragment>
-                      <option key={key} value={item.email}>{item.nama} ({item.kelas})</option>
-                  </React.Fragment>
-                )}             
-                </select>
-              </Center>
-            </div>
-
+      
          <div>
             <Center>
-              <Button variant="contained" type="submqit" color="primary" className={classes.button}>
-                  Buka Lab
+              <Button variant="contained" type="submit" color="primary" className={classes.button}>
+                  Tutup Lab
                 <SendIcon className={classes.rightIcon} style={{paddingLeft: 10,}}/>
               </Button>
             </Center>
@@ -285,12 +234,11 @@ class openDoor extends React.Component {
             horizontal: 'center',
           }}
           open={this.state.open}
-          autoHideDuration={5000}
           onClose={this.handleClose}
           ContentProps={{
             'aria-describedby': 'message-id',
           }}
-          message={<span id="message-id" className={classes.pesan}>{this.state.pesan}</span>}
+          message={<span id="message-id" className={classes.pesan}>Pintu LAB Sudah Tertutup</span>}
           action={[
             <IconButton
               key="close"

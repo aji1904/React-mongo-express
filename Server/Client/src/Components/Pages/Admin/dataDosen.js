@@ -45,6 +45,8 @@ class dataDosen extends React.Component {
   state = {
     data: [],
     open: false,
+    pesan: '',
+    nip: '',
   }
   componentDidMount() {
     axios.get(`http://localhost:4000/api/data/dataDosen`)
@@ -57,25 +59,32 @@ class dataDosen extends React.Component {
       })
   }
 
-  handleClickOpen = () => {
+  handleClickOpen = (nip) => {
     this.setState({
       open: true,
+      nip : nip
     })
+    console.log(nip)
   }
 
   handleClose = event => {
     this.setState({
       open: false,
+      nip: '',
     })
   }
 
   handleClickOut = event => {
     event.preventDefault();
 
-    axios.get(`http://localhost:4000/api/data/deleteDosen`)
+    const deleteDosen = {
+      nip: this.state.nip
+    }
+
+    axios.post(`http://localhost:4000/api/data/deleteDosen`, deleteDosen)
       .then(res => {
         console.log(res.data)
-        this.setState(state => ({data: res.data }) )
+        window.location.href = '/dataDosen'
       })
       .catch( err => {
         console.log(err)
@@ -83,10 +92,10 @@ class dataDosen extends React.Component {
 
     this.setState({
       open: false,
+      nim:''
     })
-
-
   }
+
   render() {
   const { classes, dense, secondary } = this.props;
 
@@ -126,10 +135,10 @@ class dataDosen extends React.Component {
                           <ListItemText
                             key={key}
                             primary= {item.nama}
-                            secondary={secondary ? 'Secondary text' : item.nim}
+                            secondary={secondary ? 'Secondary text' : item.nip}
                           />
                           <ListItemSecondaryAction>
-                            <IconButton edge="end" aria-label="Delete" onClick={this.handleClickOpen}>
+                            <IconButton edge="end" aria-label="Delete" onClick={(event)=> this.handleClickOpen(item.nip , event)}>
                               <DeleteIcon />
                             </IconButton>
                           </ListItemSecondaryAction>
@@ -142,6 +151,7 @@ class dataDosen extends React.Component {
               </Paper>
           </Center>
         </div>
+
         { /* dialog button */}
         <Dialog
           open={this.state.open}

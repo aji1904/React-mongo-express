@@ -72,7 +72,7 @@ class openLab extends React.Component {
     waktuMulai : '',
     waktuSelesai : '',
     tanggal : '',
-    namaDosen : '',
+    emailDosen : '',
     pelajaran : '',
     ruangan : '',
     lamaPinjam : '',
@@ -81,7 +81,7 @@ class openLab extends React.Component {
     open: false,
     dataDosen: [],
     email:'',
-
+    namaDosen: '',
   } 
 
   componentDidMount() {
@@ -91,7 +91,7 @@ class openLab extends React.Component {
     axios.get(`http://localhost:4000/api/data/user/${token}`)
       .then(res => {
         console.log(res.data)
-        this.setState(state => ({ data: res.data}))
+        this.setState({data: res.data})
       })
       .catch(err => {
         console.log(err)
@@ -100,7 +100,7 @@ class openLab extends React.Component {
     axios.get(`http://localhost:4000/api/data/emailDosen`)
       .then(res => {
         console.log(res.data)
-        this.setState(state => ({dataDosen: res.data }) )
+        this.setState({dataDosen: res.data })
       })
       .catch( err => {
         console.log(err)
@@ -113,6 +113,13 @@ class openLab extends React.Component {
   }
 
   handleChange = event => {
+
+    if(event.target.name === "pilihEmail") {
+      const namaDosen = event.target.options[event.target.selectedIndex].text
+      this.setState({namaDosen})
+      console.log(namaDosen)  
+    }
+
     const {name} = event.target
 
     this.setState({
@@ -137,7 +144,7 @@ class openLab extends React.Component {
       waktuMulai: this.state.waktuMulai,
       waktuSelesai: this.state.waktuSelesai,
       tanggal : this.state.tanggal,
-      namaDosen : this.state.dataDosen.nama,
+      namaDosen : this.state.namaDosen,
       pelajaran : this.state.pelajaran,
       ruangan : this.state.ruangan,
       lamaPinjam : this.state.lamaPinjam,
@@ -148,7 +155,6 @@ class openLab extends React.Component {
       nama: this.state.data.nama,
       kelas: this.state.data.kelas,
     }
-
 
     this.setState({
       nim: this.state.data.nim,
@@ -163,13 +169,13 @@ class openLab extends React.Component {
       open: true,
     })
 
-    console.log(sendEmail)
     axios.post('http://localhost:4000/api/lab', labSiswa)
-      .then( ({response})=>{
-        this.setState(state => ({pesan: response.data}) )
+      .then(res=>{
+        this.setState(state => ({pesan: res.data.pesan}) )
+        console.log(res)
       })
       .catch( ({response})=>{
-        this.setState(state => ({pesan: response.data}) )
+        this.setState(state => ({pesan: response.data.pesan}) )
       })
 
     axios.post('http://localhost:4000/api/emailsiswa', sendEmail)
@@ -177,7 +183,7 @@ class openLab extends React.Component {
         console.log('berhasil')
       })
       .catch( res => {
-        console.log(sendEmail)
+        console.log('error')
       })
 
   }

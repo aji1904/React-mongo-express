@@ -68,6 +68,9 @@ class openDoor extends React.Component {
     tanggal : '',
     data: {},
     pesan: '',
+    email: '',
+    kelas: '',
+    dataDosen: [],
     open: false,
   } 
 
@@ -81,6 +84,15 @@ class openDoor extends React.Component {
         this.setState(state => ({ data: res.data}))
       })
       .catch(err => {
+        console.log(err)
+      })
+
+    axios.get(`http://localhost:4000/api/data/emailDosen`)
+      .then(res => {
+        console.log(res.data)
+        this.setState({dataDosen: res.data })
+      })
+      .catch( err => {
         console.log(err)
       })
   }
@@ -98,6 +110,7 @@ class openDoor extends React.Component {
   }
 
   handleChange = event => {
+    console.log(event.target.value)
     const {name} = event.target
 
     this.setState({
@@ -116,6 +129,12 @@ class openDoor extends React.Component {
       ruangan: this.state.ruangan,
     }
 
+    const sendEmail = {
+      email: this.state.pilihEmail,
+      nama: this.state.data.nama,
+      kelas: this.state.data.kelas,
+    }
+
     this.setState({
       field: '0', 
       nama: this.state.data.nama,
@@ -131,6 +150,14 @@ class openDoor extends React.Component {
       })
       .catch( res => {
         console.log('gagal')
+      })
+
+    axios.post('http://localhost:4000/api/tutupPintuSiswa', sendEmail)
+      .then( res => {
+        console.log('berhasil')
+      })
+      .catch( res => {
+        console.log('error')
       })
   }
 
@@ -159,6 +186,18 @@ class openDoor extends React.Component {
         { /* Content Profile */ }
         <ValidatorForm ref="form" onSubmit={this.handleSubmit} onError={errors => console.log(errors)}  >
         <div className={classes.Content}>
+        <div>
+            <Center>            
+              <select className={classes.select} name="pilihEmail" value={this.state.pilihEmail} onChange={this.handleChange} required>
+                <option value="">Pilih Dosen</option>
+                {this.state.dataDosen.map( (item, key) =>
+                <React.Fragment>
+                    <option key={key} value={item.email}>{item.nama}</option>
+                </React.Fragment>
+              )}             
+              </select>
+            </Center>
+          </div>
         <div>
           <Center>
             <TextValidator
