@@ -35,7 +35,7 @@ class App extends React.Component {
       localStorage.getItem("logintoken") !== null && typeof localStorage.getItem("logintoken") !== "undefined" 
    
     return (
-//      <HttpsRedirect>
+      <HttpsRedirect>
       <BrowserRouter>	
     		<React.Fragment>
 
@@ -70,7 +70,7 @@ class App extends React.Component {
 
       	</React.Fragment>
       </BrowserRouter>
-//      </HttpsRedirect>
+      </HttpsRedirect>
     );
   }
 }
