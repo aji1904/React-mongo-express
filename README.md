@@ -1,3 +1,9 @@
+#demo https://openlabtekkom.herokuapp.com/
+
+login as admin
+user: admin123
+password: admin123
+
 # React-mongo-express
 
 install on folder Server
